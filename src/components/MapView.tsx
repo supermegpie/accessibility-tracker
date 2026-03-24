@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { APIProvider, Map, AdvancedMarker, InfoWindow } from '@vis.gl/react-google-maps';
+import { APIProvider, Map, AdvancedMarker, InfoWindow, Pin } from '@vis.gl/react-google-maps';
+import { useBusinesses, Business } from '../hooks/useBusinesses';
 
 const CHICAGO_CENTER = { lat: 41.8781, lng: -87.6298 };
 
@@ -20,10 +21,12 @@ interface Place {
 export function MapView() {
   const [places, setPlaces] = useState<Place[]>([]);
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
+  const [selectedBusiness, setSelectedBusiness] = useState<Business | null>(null);
   const [mapCenter, setMapCenter] = useState(CHICAGO_CENTER);
   const [searchInput, setSearchInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [saveMessage, setSaveMessage] = useState<string | null>(null);
+  const { businesses, refetch } = useBusinesses();
 
   const searchPlaces = async () => {
     if (!searchInput) return;
@@ -57,6 +60,7 @@ export function MapView() {
       });
       const data = await response.json();
       setSaveMessage(data.message);
+      refetch();
       setTimeout(() => setSaveMessage(null), 3000);
     } catch (error) {
       console.error('Save failed:', error);
@@ -65,7 +69,7 @@ export function MapView() {
 
   return (
     <div>
-      <div style={{ marginBottom: '10px', display: 'flex', gap: '10px' }}>
+      <div style={{ marginBottom: '10px', display: 'flex', gap: '10px', alignItems: 'center' }}>
         <input
           type="text"
           placeholder="Search location (e.g. Chicago, IL)"
@@ -81,10 +85,16 @@ export function MapView() {
         >
           {loading ? 'Searching...' : 'Search'}
         </button>
+        <span style={{ fontSize: '14px', color: '#666' }}>
+          📍 {businesses.length} businesses tracked
+        </span>
       </div>
       {saveMessage && (
         <p style={{ color: 'green', marginBottom: '10px' }}>{saveMessage}</p>
       )}
+      <div style={{ marginBottom: '8px', fontSize: '13px', color: '#666' }}>
+        🔴 Search results &nbsp;&nbsp; 🔵 Saved to tracker
+      </div>
       <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
         <Map
           style={{ width: '100%', height: '500px' }}
@@ -92,13 +102,29 @@ export function MapView() {
           zoom={13}
           mapId="accessibility-tracker-map"
         >
+          {/* Search result markers - red */}
           {places.map(place => (
             <AdvancedMarker
               key={place.place_id}
               position={place.geometry.location}
-              onClick={() => setSelectedPlace(place)}
-            />
+              onClick={() => { setSelectedPlace(place); setSelectedBusiness(null); }}
+            >
+              <Pin background="#EA4335" borderColor="#B31412" glyphColor="white" />
+            </AdvancedMarker>
           ))}
+
+          {/* Saved business markers - blue */}
+          {businesses.map(business => (
+            <AdvancedMarker
+              key={business.google_place_id}
+              position={{ lat: Number(business.latitude), lng: Number(business.longitude) }}
+              onClick={() => { setSelectedBusiness(business); setSelectedPlace(null); }}
+            >
+              <Pin background="#1E4D8C" borderColor="#0D2B4E" glyphColor="white" />
+            </AdvancedMarker>
+          ))}
+
+          {/* Search result popup */}
           {selectedPlace && (
             <InfoWindow
               position={selectedPlace.geometry.location}
@@ -116,6 +142,23 @@ export function MapView() {
                 >
                   Save to Tracker
                 </button>
+              </div>
+            </InfoWindow>
+          )}
+
+          {/* Saved business popup */}
+          {selectedBusiness && (
+            <InfoWindow
+              position={{ lat: Number(selectedBusiness.latitude), lng: Number(selectedBusiness.longitude) }}
+              onCloseClick={() => setSelectedBusiness(null)}
+            >
+              <div style={{ minWidth: '200px' }}>
+                <h3 style={{ margin: '0 0 4px' }}>{selectedBusiness.name}</h3>
+                <p style={{ margin: '0 0 4px' }}>{selectedBusiness.address}</p>
+                <p style={{ margin: '0 0 4px', color: '#1E4D8C', fontWeight: 'bold' }}>✅ Saved to Tracker</p>
+                {selectedBusiness.overall_accessibility_score && (
+                  <p style={{ margin: 0 }}>♿ Score: {selectedBusiness.overall_accessibility_score}</p>
+                )}
               </div>
             </InfoWindow>
           )}
