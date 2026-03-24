@@ -8,6 +8,7 @@ interface Place {
   name: string;
   vicinity: string;
   rating?: number;
+  types?: string[];
   geometry: {
     location: {
       lat: number;
@@ -22,6 +23,7 @@ export function MapView() {
   const [mapCenter, setMapCenter] = useState(CHICAGO_CENTER);
   const [searchInput, setSearchInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [saveMessage, setSaveMessage] = useState<string | null>(null);
 
   const searchPlaces = async () => {
     if (!searchInput) return;
@@ -37,6 +39,28 @@ export function MapView() {
       console.error('Search failed:', error);
     }
     setLoading(false);
+  };
+
+  const saveBusiness = async (place: Place) => {
+    try {
+      const response = await fetch('/api/businesses', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          google_place_id: place.place_id,
+          name: place.name,
+          address: place.vicinity,
+          latitude: place.geometry.location.lat,
+          longitude: place.geometry.location.lng,
+          business_type: place.types?.[0] || 'establishment'
+        })
+      });
+      const data = await response.json();
+      setSaveMessage(data.message);
+      setTimeout(() => setSaveMessage(null), 3000);
+    } catch (error) {
+      console.error('Save failed:', error);
+    }
   };
 
   return (
@@ -58,6 +82,9 @@ export function MapView() {
           {loading ? 'Searching...' : 'Search'}
         </button>
       </div>
+      {saveMessage && (
+        <p style={{ color: 'green', marginBottom: '10px' }}>{saveMessage}</p>
+      )}
       <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
         <Map
           style={{ width: '100%', height: '500px' }}
@@ -77,12 +104,18 @@ export function MapView() {
               position={selectedPlace.geometry.location}
               onCloseClick={() => setSelectedPlace(null)}
             >
-              <div>
+              <div style={{ minWidth: '200px' }}>
                 <h3 style={{ margin: '0 0 4px' }}>{selectedPlace.name}</h3>
                 <p style={{ margin: '0 0 4px' }}>{selectedPlace.vicinity}</p>
                 {selectedPlace.rating && (
-                  <p style={{ margin: 0 }}>⭐ {selectedPlace.rating}</p>
+                  <p style={{ margin: '0 0 8px' }}>⭐ {selectedPlace.rating}</p>
                 )}
+                <button
+                  onClick={() => saveBusiness(selectedPlace)}
+                  style={{ padding: '6px 12px', backgroundColor: '#1E4D8C', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+                >
+                  Save to Tracker
+                </button>
               </div>
             </InfoWindow>
           )}
