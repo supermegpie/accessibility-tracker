@@ -1,73 +1,97 @@
-# React + TypeScript + Vite
+# ♿ Business Accessibility Tracker
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A community-powered web app that helps people with disabilities find and evaluate accessible businesses across cities. Users can search for businesses, view them on an interactive map, and contribute accessibility ratings and reviews.
 
-Currently, two official plugins are available:
+## What It Tracks
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- ♿ Wheelchair & mobility access (ramps, elevators, door width)
+- 👂 Sensory accessibility (braille menus, hearing loops, visual alerts)
+- 🚻 Accessible restrooms
+- 🅿️ Accessible parking
+- 🤝 Service quality for people with disabilities
+- 💻 Digital accessibility
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Frontend:** React + TypeScript, Vite
+- **Maps:** Google Maps JavaScript API + Places API
+- **Auth:** Firebase Authentication
+- **Backend:** Node.js + Express (see companion repo)
+- **Database:** PostgreSQL (Neon)
 
-## Expanding the ESLint configuration
+## Getting Started
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Prerequisites
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- Node.js v20+
+- A Google Cloud account with Maps JavaScript API and Places API enabled
+- A Firebase project with Email/Password authentication enabled
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Installation
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+1. Clone the repository:
+```bash
+git clone https://github.com/supermegpie/accessibility-tracker.git
+cd accessibility-tracker
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+2. Install dependencies:
+```bash
+npm install
 ```
+
+3. Create a `.env` file based on `.env.example`:
+```bash
+cp .env.example .env
+```
+
+4. Fill in your environment variables in `.env`:
+```
+VITE_FIREBASE_API_KEY=your_firebase_api_key
+VITE_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=your_project_id
+VITE_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
+VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+VITE_FIREBASE_APP_ID=your_app_id
+VITE_FIREBASE_MEASUREMENT_ID=your_measurement_id
+VITE_GOOGLE_MAPS_API_KEY=your_google_maps_api_key
+```
+
+5. Start the development server:
+```bash
+npm run dev
+```
+
+6. Visit `http://localhost:5173`
+
+> **Note:** The backend API must also be running for full functionality. See the [backend repository](https://github.com/supermegpie/accessibility-tracker-api).
+
+## Environment Variables
+
+| Variable | Description |
+|---|---|
+| `VITE_FIREBASE_API_KEY` | Firebase project API key |
+| `VITE_FIREBASE_AUTH_DOMAIN` | Firebase auth domain |
+| `VITE_FIREBASE_PROJECT_ID` | Firebase project ID |
+| `VITE_FIREBASE_STORAGE_BUCKET` | Firebase storage bucket |
+| `VITE_FIREBASE_MESSAGING_SENDER_ID` | Firebase messaging sender ID |
+| `VITE_FIREBASE_APP_ID` | Firebase app ID |
+| `VITE_FIREBASE_MEASUREMENT_ID` | Firebase measurement ID |
+| `VITE_GOOGLE_MAPS_API_KEY` | Google Maps API key |
+
+## Features
+
+- 🔍 Search businesses by city or location
+- 🗺️ Interactive Google Map with color-coded markers
+- 🔵 Blue markers = saved & tracked businesses
+- 🔴 Red markers = search results
+- 💾 Save businesses to the accessibility tracker
+- 🔐 User authentication (login/signup)
+
+## Related Repository
+
+- [accessibility-tracker-api](https://github.com/supermegpie/accessibility-tracker-api) — Node.js + Express backend
+
+## License
+
+MIT
