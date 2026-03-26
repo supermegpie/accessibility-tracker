@@ -1,15 +1,15 @@
-# ♿ Business Accessibility Tracker
+# Business Accessibility Tracker
 
 A community-powered web app that helps people with disabilities find and evaluate accessible businesses across cities. Users can search for businesses, view them on an interactive map, and contribute accessibility ratings and reviews.
 
 ## What It Tracks
 
-- ♿ Wheelchair & mobility access (ramps, elevators, door width)
-- 👂 Sensory accessibility (braille menus, hearing loops, visual alerts)
-- 🚻 Accessible restrooms
-- 🅿️ Accessible parking
-- 🤝 Service quality for people with disabilities
-- 💻 Digital accessibility
+- Wheelchair & mobility access (ramps, elevators, door width)
+- Sensory accessibility (braille menus, hearing loops, visual alerts)
+- Accessible restrooms
+- Accessible parking
+- Service quality for people with disabilities
+- Digital accessibility
 
 ## Tech Stack
 
@@ -81,12 +81,12 @@ npm run dev
 
 ## Features
 
-- 🔍 Search businesses by city or location
-- 🗺️ Interactive Google Map with color-coded markers
-- 🔵 Blue markers = saved & tracked businesses
-- 🔴 Red markers = search results
-- 💾 Save businesses to the accessibility tracker
-- 🔐 User authentication (login/signup)
+- Search businesses by city or location
+- Interactive Google Map with color-coded markers
+- Blue markers = saved & tracked businesses
+- Red markers = search results
+- Save businesses to the accessibility tracker
+- User authentication (login/signup)
 
 ## Related Repository
 
