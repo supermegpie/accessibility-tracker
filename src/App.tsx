@@ -98,6 +98,7 @@ function App() {
         <Routes>
           <Route path="/" element={<MapView />} />
           <Route path="/trip-planner" element={<TripPlanner user={user} />} />
+          <Route path="/trip-planner/share/:shareId" element={<TripPlanner user={user} />} />
         </Routes>
       </div>
 
