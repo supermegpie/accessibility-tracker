@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { User } from 'firebase/auth';
+import { APIProvider, Map, AdvancedMarker, InfoWindow, Pin } from '@vis.gl/react-google-maps';
 
 interface TripResult {
   place_id: string;
@@ -189,6 +190,36 @@ export function TripPlanner({ user: _user }: TripPlannerProps) {
       )}
 
       {searched && !loading && results.length > 0 && (
+        <div style={{ marginBottom: '20px' }}>
+          <h3 style={{ margin: '0 0 12px', color: '#1E4D8C' }}>
+            Top {results.length} Accessible Results for {query}
+          </h3>
+          <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
+            <Map
+              style={{ width: '100%', height: '300px', borderRadius: '8px', marginBottom: '20px' }}
+              defaultCenter={{ lat: results[0].location.lat, lng: results[0].location.lng }}
+              defaultZoom={13}
+              mapId="trip-planner-map"
+            >
+              {results.map((result, index) => (
+                <AdvancedMarker
+                  key={result.place_id}
+                  position={{ lat: result.location.lat, lng: result.location.lng }}
+                >
+                  <Pin
+                    background={result.accessibility_score >= 70 ? '#27AE60' : result.accessibility_score >= 50 ? '#F39C12' : '#E74C3C'}
+                    borderColor="#333"
+                    glyph={String(index + 1)}
+                    glyphColor="white"
+                  />
+                </AdvancedMarker>
+              ))}
+            </Map>
+          </APIProvider>
+        </div>
+      )}
+
+      {searched && !loading && results.length > 0 && (
         <div>
           <h3 style={{ margin: '0 0 16px', color: '#1E4D8C' }}>
             Top {results.length} Accessible Results for "{query}"
@@ -252,7 +283,7 @@ export function TripPlanner({ user: _user }: TripPlannerProps) {
                     </div>
                   )}
                   {result.warnings.length > 0 && (
-                    <div>
+                    <div style={{ marginBottom: '12px' }}>
                       <div style={{ fontSize: '13px', fontWeight: 'bold', color: '#F39C12', marginBottom: '4px' }}>
                         Things to know:
                       </div>
@@ -263,6 +294,23 @@ export function TripPlanner({ user: _user }: TripPlannerProps) {
                       ))}
                     </div>
                   )}
+                  <a
+                    href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(result.address)}&destination_place_id=${result.place_id}&travelmode=transit`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      display: 'inline-block',
+                      padding: '8px 16px',
+                      backgroundColor: '#1E4D8C',
+                      color: 'white',
+                      borderRadius: '4px',
+                      textDecoration: 'none',
+                      fontSize: '13px',
+                      fontWeight: 'bold'
+                    }}
+                  >
+                    Get Directions
+                  </a>
                 </div>
               </div>
             </div>
