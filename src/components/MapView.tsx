@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { APIProvider, Map, AdvancedMarker, InfoWindow, Pin } from '@vis.gl/react-google-maps';
 import { useBusinesses, Business } from '../hooks/useBusinesses';
 import { ReviewForm } from './ReviewForm';
+import { BusinessDetail } from './BusinessDetail';
 
 const CHICAGO_CENTER = { lat: 41.8781, lng: -87.6298 };
 
@@ -29,6 +30,7 @@ export function MapView() {
   const [saveMessage, setSaveMessage] = useState<string | null>(null);
   const { businesses, refetch } = useBusinesses();
   const [showReviewForm, setShowReviewForm] = useState(false);
+  const [showBusinessDetail, setShowBusinessDetail] = useState(false);
 
   const searchPlaces = async () => {
     if (!searchInput) return;
@@ -107,7 +109,7 @@ export function MapView() {
         🟡 Fair &nbsp;&nbsp;
         🔴 Not accessible &nbsp;&nbsp;
         🔵 Not yet rated
-      </div>
+</div>
       <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
         <Map
           style={{ width: '100%', height: '500px' }}
@@ -177,14 +179,22 @@ export function MapView() {
                 <p style={{ margin: '0 0 4px' }}>{selectedBusiness.address}</p>
                 <p style={{ margin: '0 0 8px', color: '#1E4D8C', fontWeight: 'bold' }}>✅ Saved to Tracker</p>
                 {selectedBusiness.overall_accessibility_score && (
-                <p style={{ margin: '0 0 8px' }}>♿ Score: {selectedBusiness.overall_accessibility_score}</p>
-                 )}
-                <button
-                  onClick={() => setShowReviewForm(true)}
-                  style={{ padding: '6px 12px', backgroundColor: '#27AE60', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
-                >
-                  Rate Accessibility
-                </button>
+                  <p style={{ margin: '0 0 8px' }}>♿ Score: {Number(selectedBusiness.overall_accessibility_score).toFixed(1)}/5</p>
+                )}
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <button
+                    onClick={() => setShowBusinessDetail(true)}
+                    style={{ padding: '6px 12px', backgroundColor: '#1E4D8C', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+                  >
+                    View Details
+                  </button>
+                  <button
+                    onClick={() => setShowReviewForm(true)}
+                    style={{ padding: '6px 12px', backgroundColor: '#27AE60', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+                  >
+                   Rate
+                  </button>
+                </div>
               </div>
             </InfoWindow>
           )}
@@ -196,6 +206,14 @@ export function MapView() {
           businessName={selectedBusiness.name}
           onClose={() => setShowReviewForm(false)}
           onSubmitted={() => { refetch(); setSelectedBusiness(null); }}
+        />
+      )}
+
+      {showBusinessDetail && selectedBusiness && (
+        <BusinessDetail
+          business={selectedBusiness}
+          onClose={() => setShowBusinessDetail(false)}
+          onRateClick={() => { setShowBusinessDetail(false); setShowReviewForm(true); }}
         />
       )}
     </div>
