@@ -69,6 +69,13 @@ export function MapView() {
     }
   };
 
+  const getMarkerColor = (score: number | null) => {
+    if (!score) return { background: '#1E4D8C', border: '#0D2B4E' }; // Blue - not rated
+    if (score >= 4) return { background: '#27AE60', border: '#1A7A40' }; // Green - highly accessible
+    if (score >= 3) return { background: '#F39C12', border: '#B7770D' }; // Yellow - fair
+    return { background: '#E74C3C', border: '#A93226' }; // Red - not accessible
+  };
+
   return (
     <div>
       <div style={{ marginBottom: '10px', display: 'flex', gap: '10px', alignItems: 'center' }}>
@@ -95,7 +102,11 @@ export function MapView() {
         <p style={{ color: 'green', marginBottom: '10px' }}>{saveMessage}</p>
       )}
       <div style={{ marginBottom: '8px', fontSize: '13px', color: '#666' }}>
-        🔴 Search results &nbsp;&nbsp; 🔵 Saved to tracker
+        🔴 Search results &nbsp;&nbsp;
+        🟢 Highly accessible &nbsp;&nbsp;
+        🟡 Fair &nbsp;&nbsp;
+        🔴 Not accessible &nbsp;&nbsp;
+        🔵 Not yet rated
       </div>
       <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
         <Map
@@ -115,16 +126,23 @@ export function MapView() {
             </AdvancedMarker>
           ))}
 
-          {/* Saved business markers - blue */}
-          {businesses.map(business => (
-            <AdvancedMarker
-              key={business.google_place_id}
-              position={{ lat: Number(business.latitude), lng: Number(business.longitude) }}
-              onClick={() => { setSelectedBusiness(business); setSelectedPlace(null); }}
-            >
-              <Pin background="#1E4D8C" borderColor="#0D2B4E" glyphColor="white" />
-            </AdvancedMarker>
-          ))}
+          {/* Saved business markers - color coded by score */}
+          {businesses.map(business => {
+            const colors = getMarkerColor(business.overall_accessibility_score);
+            return (
+              <AdvancedMarker
+                key={business.google_place_id}
+                position={{ lat: Number(business.latitude), lng: Number(business.longitude) }}
+                onClick={() => { setSelectedBusiness(business); setSelectedPlace(null); }}
+              >
+                <Pin
+                  background={colors.background}
+                  borderColor={colors.border}
+                  glyphColor="white"
+                />
+              </AdvancedMarker>
+            );
+          })}
 
           {/* Search result popup */}
           {selectedPlace && (
