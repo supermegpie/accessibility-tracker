@@ -1,30 +1,67 @@
-# Business Accessibility Tracker
+# ♿ Business Accessibility Tracker
 
-A community-powered web app that helps people with disabilities find and evaluate accessible businesses across cities. Users can search for businesses, view them on an interactive map, and contribute accessibility ratings and reviews.
+A community-powered web app that helps people with disabilities find, rate, and plan trips to accessible businesses across cities. Users can search for businesses on an interactive map, submit structured accessibility reviews, and use the trip planner to find the top 5 most accessible destinations with real-time transit status.
 
-## What It Tracks
+## Features
 
-- Wheelchair & mobility access (ramps, elevators, door width)
-- Sensory accessibility (braille menus, hearing loops, visual alerts)
-- Accessible restrooms
-- Accessible parking
-- Service quality for people with disabilities
-- Digital accessibility
+### 🗺️ Interactive Accessibility Map
+- Search businesses by city or location using Google Places API
+- Color-coded markers based on accessibility score:
+  - 🟢 Green — Highly accessible (4+)
+  - 🟡 Yellow — Fair (3+)
+  - 🔴 Red — Not accessible (below 3)
+  - 🔵 Blue — Not yet rated
+- Save businesses to the accessibility tracker
+- Filter by minimum accessibility score and business type
+
+### ⭐ Community Reviews
+- Submit structured accessibility ratings across 5 categories:
+  - Wheelchair & Mobility Access
+  - Sensory Accessibility (braille, hearing loops)
+  - Staff & Service Quality
+  - Accessible Restrooms
+  - Accessible Parking
+- View all community reviews and score breakdown per business
+- Auto-calculated overall accessibility score
+
+### 🏙️ City Accessibility Dashboard
+- Overall city accessibility score
+- Score breakdown by category
+- Top rated accessible businesses
+- Stats by business type
+
+### ♿ Accessible Trip Planner
+Find the top 5 most accessible destinations for any search query, scored across multiple data sources:
+- Google verified wheelchair accessible entrance
+- Google star ratings
+- Community accessibility scores from this app
+- Real-time transit accessibility status:
+  - **Chicago:** CTA elevator outages + Metra accessibility alerts + Pace Bus link
+  - **New York City:** MTA elevator outage status
+  - **Seattle:** Sound Transit service alerts + King County Metro
+- Transit warnings only shown for outages near each destination
+- Mini map with numbered color-coded markers
+- Get Directions button via Google Maps transit
+- Shareable results link
 
 ## Tech Stack
 
 - **Frontend:** React + TypeScript, Vite
+- **Routing:** React Router
 - **Maps:** Google Maps JavaScript API + Places API
-- **Auth:** Firebase Authentication
+- **Auth:** Firebase Authentication (Email/Password)
 - **Backend:** Node.js + Express (see companion repo)
-- **Database:** PostgreSQL (Neon)
+- **Database:** PostgreSQL (Neon cloud)
 
 ## Getting Started
 
 ### Prerequisites
 
 - Node.js v20+
-- A Google Cloud account with Maps JavaScript API and Places API enabled
+- A Google Cloud account with these APIs enabled:
+  - Maps JavaScript API
+  - Places API
+  - Geocoding API
 - A Firebase project with Email/Password authentication enabled
 
 ### Installation
@@ -45,17 +82,7 @@ npm install
 cp .env.example .env
 ```
 
-4. Fill in your environment variables in `.env`:
-```
-VITE_FIREBASE_API_KEY=your_firebase_api_key
-VITE_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
-VITE_FIREBASE_PROJECT_ID=your_project_id
-VITE_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
-VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
-VITE_FIREBASE_APP_ID=your_app_id
-VITE_FIREBASE_MEASUREMENT_ID=your_measurement_id
-VITE_GOOGLE_MAPS_API_KEY=your_google_maps_api_key
-```
+4. Fill in your environment variables in `.env`
 
 5. Start the development server:
 ```bash
@@ -64,7 +91,7 @@ npm run dev
 
 6. Visit `http://localhost:5173`
 
-> **Note:** The backend API must also be running for full functionality. See the [backend repository](https://github.com/supermegpie/accessibility-tracker-api).
+> **Note:** The backend API must also be running. See the [backend repository](https://github.com/supermegpie/accessibility-tracker-api).
 
 ## Environment Variables
 
@@ -78,15 +105,6 @@ npm run dev
 | `VITE_FIREBASE_APP_ID` | Firebase app ID |
 | `VITE_FIREBASE_MEASUREMENT_ID` | Firebase measurement ID |
 | `VITE_GOOGLE_MAPS_API_KEY` | Google Maps API key |
-
-## Features
-
-- Search businesses by city or location
-- Interactive Google Map with color-coded markers
-- Blue markers = saved & tracked businesses
-- Red markers = search results
-- Save businesses to the accessibility tracker
-- User authentication (login/signup)
 
 ## Related Repository
 
