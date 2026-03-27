@@ -30,7 +30,7 @@ A community-powered web app that helps people with disabilities find, rate, and 
 - Top rated accessible businesses
 - Stats by business type
 
-### ♿ Accessible Trip Planner
+### Accessible Trip Planner
 Find the top 5 most accessible destinations for any search query, scored across multiple data sources:
 - Google verified wheelchair accessible entrance
 - Google star ratings
