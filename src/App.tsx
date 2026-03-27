@@ -1,14 +1,18 @@
 import { useState, useEffect } from 'react';
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { auth } from './firebase';
 import { LoginPage } from './components/LoginPage';
 import { MapView } from './components/MapView';
 import { CityDashboard } from './components/CityDashboard';
+import { TripPlanner } from './components/TripPlanner';
 
 function App() {
   const [user, setUser] = useState<User | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
   const [showDashboard, setShowDashboard] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -31,10 +35,26 @@ function App() {
         position: 'sticky', top: 0, zIndex: 100,
         boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
       }}>
-        <h1 style={{ margin: 0, fontSize: 'clamp(16px, 4vw, 22px)', fontWeight: 'bold' }}>
-          ♿ Accessibility Tracker
+        <h1
+          onClick={() => navigate('/')}
+          style={{ margin: 0, fontSize: 'clamp(16px, 4vw, 22px)', fontWeight: 'bold', cursor: 'pointer' }}
+        >
+          Accessibility Tracker
         </h1>
         <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+          <button
+            onClick={() => navigate('/')}
+            style={{
+              padding: '6px 12px',
+              backgroundColor: location.pathname === '/' ? 'white' : 'transparent',
+              color: location.pathname === '/' ? '#1E4D8C' : 'white',
+              border: '1px solid rgba(255,255,255,0.5)',
+              borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold',
+              fontSize: 'clamp(11px, 2.5vw, 14px)'
+            }}
+          >
+            Map
+          </button>
           <button
             onClick={() => setShowDashboard(true)}
             style={{
@@ -45,6 +65,19 @@ function App() {
             }}
           >
             Dashboard
+          </button>
+          <button
+            onClick={() => navigate('/trip-planner')}
+            style={{
+              padding: '6px 12px',
+              backgroundColor: location.pathname === '/trip-planner' ? 'white' : 'transparent',
+              color: location.pathname === '/trip-planner' ? '#1E4D8C' : 'white',
+              border: '1px solid rgba(255,255,255,0.5)',
+              borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold',
+              fontSize: 'clamp(11px, 2.5vw, 14px)'
+            }}
+          >
+            Trip Planner
           </button>
           <button
             onClick={() => auth.signOut()}
@@ -60,9 +93,12 @@ function App() {
         </div>
       </div>
 
-      {/* Main Content */}
+      {/* Routes */}
       <div style={{ padding: '12px', maxWidth: '1200px', margin: '0 auto' }}>
-        <MapView />
+        <Routes>
+          <Route path="/" element={<MapView />} />
+          <Route path="/trip-planner" element={<TripPlanner user={user} />} />
+        </Routes>
       </div>
 
       {showDashboard && <CityDashboard onClose={() => setShowDashboard(false)} />}
