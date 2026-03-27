@@ -2,14 +2,12 @@ import { useState, useEffect } from 'react';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { auth } from './firebase';
 import { LoginPage } from './components/LoginPage';
-import { useBusinesses } from './hooks/useBusinesses';
 import { MapView } from './components/MapView';
 import { CityDashboard } from './components/CityDashboard';
 
 function App() {
   const [user, setUser] = useState<User | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
-  const { businesses, loading, error } = useBusinesses();
   const [showDashboard, setShowDashboard] = useState(false);
 
   useEffect(() => {
@@ -20,29 +18,55 @@ function App() {
     return unsubscribe;
   }, []);
 
-  if (authLoading) return <p>Loading...</p>;
+  if (authLoading) return <p style={{ padding: '20px' }}>Loading...</p>;
   if (!user) return <LoginPage />;
 
   return (
-    <div style={{ maxWidth: '800px', margin: '40px auto', fontFamily: 'Arial' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-        <h1 style={{ margin: 0, color: '#1E4D8C' }}>Accessibility Tracker</h1>
-        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+    <div style={{ fontFamily: 'Arial, sans-serif', minHeight: '100vh', backgroundColor: '#f5f7fa' }}>
+      {/* Header */}
+      <div style={{
+        backgroundColor: '#1E4D8C', color: 'white',
+        padding: '12px 16px',
+        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+        position: 'sticky', top: 0, zIndex: 100,
+        boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
+      }}>
+        <h1 style={{ margin: 0, fontSize: 'clamp(16px, 4vw, 22px)', fontWeight: 'bold' }}>
+          ♿ Accessibility Tracker
+        </h1>
+        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
           <button
             onClick={() => setShowDashboard(true)}
-            style={{ padding: '8px 16px', backgroundColor: '#1E4D8C', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+            style={{
+              padding: '6px 12px', backgroundColor: 'white',
+              color: '#1E4D8C', border: 'none', borderRadius: '4px',
+              cursor: 'pointer', fontWeight: 'bold',
+              fontSize: 'clamp(11px, 2.5vw, 14px)'
+            }}
           >
-            City Dashboard
+            Dashboard
           </button>
-          <span style={{ color: '#666', fontSize: '14px' }}>{user.email}</span>
-          <button onClick={() => auth.signOut()} style={{ padding: '8px 16px', border: '1px solid #ddd', borderRadius: '4px', cursor: 'pointer', backgroundColor: 'white' }}>
+          <button
+            onClick={() => auth.signOut()}
+            style={{
+              padding: '6px 12px', backgroundColor: 'transparent',
+              color: 'white', border: '1px solid rgba(255,255,255,0.5)',
+              borderRadius: '4px', cursor: 'pointer',
+              fontSize: 'clamp(11px, 2.5vw, 14px)'
+            }}
+          >
             Sign Out
-        </button>
+          </button>
+        </div>
       </div>
+
+      {/* Main Content */}
+      <div style={{ padding: '12px', maxWidth: '1200px', margin: '0 auto' }}>
+        <MapView />
+      </div>
+
+      {showDashboard && <CityDashboard onClose={() => setShowDashboard(false)} />}
     </div>
-    <MapView />
-    {showDashboard && <CityDashboard onClose={() => setShowDashboard(false)} />}
-  </div>
   );
 }
 

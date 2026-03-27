@@ -83,24 +83,47 @@ export function MapView() {
   return (
     <div>
       <AccessibilityFilter filters={filters} onChange={setFilters} />
-      <div style={{ marginBottom: '10px', display: 'flex', gap: '10px', alignItems: 'center' }}>
+      <div style={{
+        marginBottom: '10px',
+        display: 'flex',
+        gap: '8px',
+        alignItems: 'center',
+        flexWrap: 'wrap'
+      }}>
         <input
           type="text"
           placeholder="Search location (e.g. Chicago, IL)"
           value={searchInput}
           onChange={e => setSearchInput(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && searchPlaces()}
-          style={{ padding: '8px', width: '300px' }}
+          style={{
+            padding: '10px',
+            flex: '1',
+            minWidth: '200px',
+            borderRadius: '4px',
+            border: '1px solid #ddd',
+            fontSize: '16px'
+          }}
         />
         <button
           onClick={searchPlaces}
-          style={{ padding: '8px 16px' }}
+          style={{
+            padding: '10px 20px',
+            backgroundColor: '#1E4D8C',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer',
+            fontWeight: 'bold',
+            fontSize: '16px',
+            whiteSpace: 'nowrap'
+          }}
           disabled={loading}
         >
           {loading ? 'Searching...' : 'Search'}
         </button>
-        <span style={{ fontSize: '14px', color: '#666' }}>
-          📍 {businesses.length} businesses tracked
+        <span style={{ fontSize: '13px', color: '#666', whiteSpace: 'nowrap' }}>
+          {businesses.length} tracked
         </span>
       </div>
       {saveMessage && (
@@ -115,7 +138,7 @@ export function MapView() {
 </div>
       <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
         <Map
-          style={{ width: '100%', height: '500px' }}
+          style={{ width: '100%', height: 'calc(100vh - 200px)', minHeight: '400px' }}
           center={mapCenter}
           zoom={13}
           mapId="accessibility-tracker-map"
@@ -180,9 +203,9 @@ export function MapView() {
               <div style={{ minWidth: '200px' }}>
                 <h3 style={{ margin: '0 0 4px' }}>{selectedBusiness.name}</h3>
                 <p style={{ margin: '0 0 4px' }}>{selectedBusiness.address}</p>
-                <p style={{ margin: '0 0 8px', color: '#1E4D8C', fontWeight: 'bold' }}>✅ Saved to Tracker</p>
+                <p style={{ margin: '0 0 8px', color: '#1E4D8C', fontWeight: 'bold' }}>Saved to Tracker</p>
                 {selectedBusiness.overall_accessibility_score && (
-                  <p style={{ margin: '0 0 8px' }}>♿ Score: {Number(selectedBusiness.overall_accessibility_score).toFixed(1)}/5</p>
+                  <p style={{ margin: '0 0 8px' }}>Score: {Number(selectedBusiness.overall_accessibility_score).toFixed(1)}/5</p>
                 )}
                 <div style={{ display: 'flex', gap: '8px' }}>
                   <button
