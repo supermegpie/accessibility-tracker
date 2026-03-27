@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { APIProvider, Map, AdvancedMarker, InfoWindow, Pin } from '@vis.gl/react-google-maps';
 import { useBusinesses, Business } from '../hooks/useBusinesses';
+import { ReviewForm } from './ReviewForm';
 
 const CHICAGO_CENTER = { lat: 41.8781, lng: -87.6298 };
 
@@ -27,6 +28,7 @@ export function MapView() {
   const [loading, setLoading] = useState(false);
   const [saveMessage, setSaveMessage] = useState<string | null>(null);
   const { businesses, refetch } = useBusinesses();
+  const [showReviewForm, setShowReviewForm] = useState(false);
 
   const searchPlaces = async () => {
     if (!searchInput) return;
@@ -155,15 +157,29 @@ export function MapView() {
               <div style={{ minWidth: '200px' }}>
                 <h3 style={{ margin: '0 0 4px' }}>{selectedBusiness.name}</h3>
                 <p style={{ margin: '0 0 4px' }}>{selectedBusiness.address}</p>
-                <p style={{ margin: '0 0 4px', color: '#1E4D8C', fontWeight: 'bold' }}>✅ Saved to Tracker</p>
+                <p style={{ margin: '0 0 8px', color: '#1E4D8C', fontWeight: 'bold' }}>✅ Saved to Tracker</p>
                 {selectedBusiness.overall_accessibility_score && (
-                  <p style={{ margin: 0 }}>♿ Score: {selectedBusiness.overall_accessibility_score}</p>
-                )}
+                <p style={{ margin: '0 0 8px' }}>♿ Score: {selectedBusiness.overall_accessibility_score}</p>
+                 )}
+                <button
+                  onClick={() => setShowReviewForm(true)}
+                  style={{ padding: '6px 12px', backgroundColor: '#27AE60', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+                >
+                  Rate Accessibility
+                </button>
               </div>
             </InfoWindow>
           )}
         </Map>
       </APIProvider>
+      {showReviewForm && selectedBusiness && (
+        <ReviewForm
+          businessId={selectedBusiness.id}
+          businessName={selectedBusiness.name}
+          onClose={() => setShowReviewForm(false)}
+          onSubmitted={() => { refetch(); setSelectedBusiness(null); }}
+        />
+      )}
     </div>
   );
 }
