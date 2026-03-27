@@ -48,6 +48,9 @@ export function TripPlanner({ user: _user }: TripPlannerProps) {
   const [results, setResults] = useState<TripResult[]>([]);
   const [ctaOutages, setCtaOutages] = useState(0);
   const [metraOutages, setMetraOutages] = useState(0);
+  const [isChicago, setIsChicago] = useState(false);
+  const [isNYC, setIsNYC] = useState(false);
+  const [isSeattle, setIsSeattle] = useState(false);
   const [searched, setSearched] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [shareUrl, setShareUrl] = useState<string | null>(null);
@@ -83,6 +86,9 @@ export function TripPlanner({ user: _user }: TripPlannerProps) {
       setResults(data.results);
       setCtaOutages(data.cta_outages || 0);
       setMetraOutages(data.metra_outages || 0);
+      setIsChicago(data.is_chicago || false);
+      setIsNYC(data.is_nyc || false);
+      setIsSeattle(data.is_seattle || false);
       setSearched(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Search failed');
@@ -188,21 +194,60 @@ export function TripPlanner({ user: _user }: TripPlannerProps) {
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '8px' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                <span>
-                  {ctaOutages > 0
-                    ? 'CTA: ' + ctaOutages + ' elevator outage(s) reported'
-                    : 'CTA: No elevator outages reported'
-                  }
-                </span>
-                <span>
-                  {metraOutages > 0
-                    ? 'Metra: ' + metraOutages + ' accessibility alert(s) reported'
-                    : 'Metra: No accessibility alerts reported'
-                  }
-                </span>
-                <span style={{ fontSize: '12px', color: '#888' }}>
-                  Pace Bus: Visit pacebus.com for real-time accessibility info
-                </span>
+                {isChicago && (
+                  <>
+                    <span>{ctaOutages > 0 ? 'CTA: ' + ctaOutages + ' elevator outage(s) reported' : 'CTA: No elevator outages reported'}</span>
+                    <span>{metraOutages > 0 ? 'Metra: ' + metraOutages + ' accessibility alert(s) reported' : 'Metra: No accessibility alerts reported'}</span>
+                    <span style={{ fontSize: '12px', color: '#888' }}>Pace Bus: Visit pacebus.com for real-time info</span>
+                  </>
+                )}
+                {isNYC && (
+                  <>
+                    <span>{ctaOutages > 0 ? 'MTA: ' + ctaOutages + ' elevator outage(s) reported' : 'MTA: No elevator outages reported'}</span>
+                    <span style={{ fontSize: '12px', color: '#888' }}>MTA Bus: Visit mta.info for accessibility info</span>
+                  </>
+                )}
+                {isSeattle && (
+                  <>
+                    <span>Sound Transit: Visit soundtransit.org for elevator status</span>
+                    <span style={{ fontSize: '12px', color: '#888' }}>King County Metro: Visit kingcounty.gov/metro for info</span>
+                  </>
+                )}
+                {!isChicago && !isNYC && !isSeattle && (
+                  <span style={{ fontSize: '13px' }}>Transit accessibility info not available for this city yet</span>
+                )}
+              </div>
+              <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                {isChicago && ctaOutages > 0 && (
+                  <a href="https://www.transitchicago.com/alerts/" target="_blank" rel="noopener noreferrer"
+                    style={{ backgroundColor: '#F39C12', color: 'white', padding: '4px 12px', borderRadius: '4px', fontSize: '13px', fontWeight: 'bold', textDecoration: 'none', whiteSpace: 'nowrap' }}>
+                    CTA Alerts
+                  </a>
+                )}
+                {isChicago && metraOutages > 0 && (
+                  <a href="https://metrarail.com/metra-accessibility" target="_blank" rel="noopener noreferrer"
+                    style={{ backgroundColor: '#F39C12', color: 'white', padding: '4px 12px', borderRadius: '4px', fontSize: '13px', fontWeight: 'bold', textDecoration: 'none', whiteSpace: 'nowrap' }}>
+                    Metra Accessibility Info
+                  </a>
+                )}
+                {isNYC && (
+                  <a href="https://www.mta.info/elevator-escalator-status" target="_blank" rel="noopener noreferrer"
+                    style={{ backgroundColor: ctaOutages > 0 ? '#F39C12' : '#27AE60', color: 'white', padding: '4px 12px', borderRadius: '4px', fontSize: '13px', fontWeight: 'bold', textDecoration: 'none', whiteSpace: 'nowrap' }}>
+                    MTA Accessibility Status
+                  </a>
+                )}
+                {isSeattle && (
+                  <a href="https://www.soundtransit.org/ride-with-us/service-alerts" target="_blank" rel="noopener noreferrer"
+                    style={{ backgroundColor: '#27AE60', color: 'white', padding: '4px 12px', borderRadius: '4px', fontSize: '13px', fontWeight: 'bold', textDecoration: 'none', whiteSpace: 'nowrap' }}>
+                    Sound Transit Accessibility
+                  </a>
+                )}
+                {isSeattle && (
+                  <a href="https://kingcounty.gov/en/dept/metro/rider-tools/service-advisories" target="_blank" rel="noopener noreferrer"
+                    style={{ backgroundColor: '#27AE60', color: 'white', padding: '4px 12px', borderRadius: '4px', fontSize: '13px', fontWeight: 'bold', textDecoration: 'none', whiteSpace: 'nowrap' }}>
+                    King County Metro Accessibility
+                  </a>
+                )}
               </div>
               <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                 {ctaOutages > 0 && (

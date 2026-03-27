@@ -33,10 +33,12 @@ export function MapView() {
   const [showBusinessDetail, setShowBusinessDetail] = useState(false);
   const [filters, setFilters] = useState<FilterState>({ minScore: 0, category: 'all', businessType: 'all' });
   const { businesses, refetch } = useBusinesses(filters.minScore, filters.businessType);
+  const [searched, setSearched] = useState(false);
 
   const searchPlaces = async () => {
     if (!searchInput) return;
     setLoading(true);
+    setSearched(false);
     try {
       const response = await fetch(
         `/api/places/search?location=${encodeURIComponent(searchInput)}&type=restaurant`
@@ -44,6 +46,7 @@ export function MapView() {
       const data = await response.json();
       setPlaces(data.places);
       setMapCenter(data.center);
+      setSearched(true);
     } catch (error) {
       console.error('Search failed:', error);
     }
@@ -139,8 +142,9 @@ export function MapView() {
       <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
         <Map
           style={{ width: '100%', height: 'calc(100vh - 200px)', minHeight: '400px' }}
-          center={mapCenter}
-          zoom={13}
+          defaultCenter={mapCenter}
+          defaultZoom={13}
+          center={searched ? mapCenter : undefined}
           mapId="accessibility-tracker-map"
         >
           {/* Search result markers - red */}
