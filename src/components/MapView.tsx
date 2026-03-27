@@ -3,6 +3,7 @@ import { APIProvider, Map, AdvancedMarker, InfoWindow, Pin } from '@vis.gl/react
 import { useBusinesses, Business } from '../hooks/useBusinesses';
 import { ReviewForm } from './ReviewForm';
 import { BusinessDetail } from './BusinessDetail';
+import { AccessibilityFilter, FilterState } from './AccessibilityFilter';
 
 const CHICAGO_CENTER = { lat: 41.8781, lng: -87.6298 };
 
@@ -28,9 +29,10 @@ export function MapView() {
   const [searchInput, setSearchInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [saveMessage, setSaveMessage] = useState<string | null>(null);
-  const { businesses, refetch } = useBusinesses();
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [showBusinessDetail, setShowBusinessDetail] = useState(false);
+  const [filters, setFilters] = useState<FilterState>({ minScore: 0, category: 'all', businessType: 'all' });
+  const { businesses, refetch } = useBusinesses(filters.minScore, filters.businessType);
 
   const searchPlaces = async () => {
     if (!searchInput) return;
@@ -80,6 +82,7 @@ export function MapView() {
 
   return (
     <div>
+      <AccessibilityFilter filters={filters} onChange={setFilters} />
       <div style={{ marginBottom: '10px', display: 'flex', gap: '10px', alignItems: 'center' }}>
         <input
           type="text"

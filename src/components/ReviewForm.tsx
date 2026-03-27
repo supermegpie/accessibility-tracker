@@ -63,7 +63,7 @@ export function ReviewForm({ businessId, businessName, onClose, onSubmitted }: R
       } else {
         setError(data.error || 'Failed to submit review');
       }
-    } catch (err) {
+    } catch (_err) {
       setError('Something went wrong. Please try again.');
     }
     setSubmitting(false);

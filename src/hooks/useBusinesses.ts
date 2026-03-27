@@ -11,14 +11,22 @@ export interface Business {
   overall_accessibility_score: number;
 }
 
-export function useBusinesses() {
+export function useBusinesses(minScore = 0, businessType = 'all') {
   const [businesses, setBusinesses] = useState<Business[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const fetchBusinesses = async () => {
     try {
-      const response = await fetch('/api/businesses');
+      const params = new URLSearchParams();
+      if (minScore > 0) params.append('minScore', String(minScore));
+      if (businessType !== 'all') params.append('businessType', businessType);
+
+      const url = minScore > 0 || businessType !== 'all'
+        ? `/api/businesses/filter?${params.toString()}`
+        : '/api/businesses';
+
+      const response = await fetch(url);
       if (!response.ok) throw new Error('Network response was not ok');
       const data = await response.json();
       setBusinesses(data);
@@ -32,7 +40,7 @@ export function useBusinesses() {
 
   useEffect(() => {
     fetchBusinesses();
-  }, []);
+  }, [minScore, businessType]);
 
   return { businesses, loading, error, refetch: fetchBusinesses };
 }
