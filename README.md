@@ -1,20 +1,20 @@
-# ♿ Business Accessibility Tracker
+# Business Accessibility Tracker
 
 A community-powered web app that helps people with disabilities find, rate, and plan trips to accessible businesses across cities. Users can search for businesses on an interactive map, submit structured accessibility reviews, and use the trip planner to find the top 5 most accessible destinations with real-time transit status.
 
 ## Features
 
-### 🗺️ Interactive Accessibility Map
+### Interactive Accessibility Map
 - Search businesses by city or location using Google Places API
 - Color-coded markers based on accessibility score:
-  - 🟢 Green — Highly accessible (4+)
-  - 🟡 Yellow — Fair (3+)
-  - 🔴 Red — Not accessible (below 3)
-  - 🔵 Blue — Not yet rated
+  - Green — Highly accessible (4+)
+  - Yellow — Fair (3+)
+  - Red — Not accessible (below 3)
+  - Blue — Not yet rated
 - Save businesses to the accessibility tracker
 - Filter by minimum accessibility score and business type
 
-### ⭐ Community Reviews
+### Community Reviews
 - Submit structured accessibility ratings across 5 categories:
   - Wheelchair & Mobility Access
   - Sensory Accessibility (braille, hearing loops)
@@ -24,7 +24,7 @@ A community-powered web app that helps people with disabilities find, rate, and 
 - View all community reviews and score breakdown per business
 - Auto-calculated overall accessibility score
 
-### 🏙️ City Accessibility Dashboard
+### City Accessibility Dashboard
 - Overall city accessibility score
 - Score breakdown by category
 - Top rated accessible businesses
