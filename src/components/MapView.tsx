@@ -35,6 +35,7 @@ export function MapView() {
   const { businesses, refetch } = useBusinesses(filters.minScore, filters.businessType);
   const [searched, setSearched] = useState(false);
 
+  /* Search for places using Google Places API */
   const searchPlaces = async () => {
     if (!searchInput) return;
     setLoading(true);
@@ -76,11 +77,12 @@ export function MapView() {
     }
   };
 
+  /* Determine marker color based on accessibility score */
   const getMarkerColor = (score: number | null) => {
-    if (!score) return { background: '#1E4D8C', border: '#0D2B4E' }; // Blue - not rated
-    if (score >= 4) return { background: '#27AE60', border: '#1A7A40' }; // Green - highly accessible
-    if (score >= 3) return { background: '#F39C12', border: '#B7770D' }; // Yellow - fair
-    return { background: '#E74C3C', border: '#A93226' }; // Red - not accessible
+    if (!score) return { background: '#00ACC1', border: '#006978' }; // Blue = not rated
+    if (score >= 4) return { background: '#2E7D32', border: '#1A7A40' }; // Green = highly accessible
+    if (score >= 3) return { background: '#E65100', border: '#B7770D' }; // Yellow = fair
+    return { background: '#B71C1C', border: '#A93226' }; // Red = not accessible
   };
 
   return (
@@ -95,7 +97,7 @@ export function MapView() {
       }}>
         <input
           type="text"
-          placeholder="Search location (e.g. Chicago, IL)"
+          placeholder="Enter a city or neighborhood"
           value={searchInput}
           onChange={e => setSearchInput(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && searchPlaces()}
@@ -112,7 +114,7 @@ export function MapView() {
           onClick={searchPlaces}
           style={{
             padding: '10px 20px',
-            backgroundColor: '#1E4D8C',
+            backgroundColor: '#00ACC1',
             color: 'white',
             border: 'none',
             borderRadius: '4px',
@@ -126,18 +128,18 @@ export function MapView() {
           {loading ? 'Searching...' : 'Search'}
         </button>
         <span style={{ fontSize: '13px', color: '#666', whiteSpace: 'nowrap' }}>
-          {businesses.length} tracked
+          {businesses.length} {businesses.length === 1 ? 'business' : 'businesses'} tracked
         </span>
       </div>
       {saveMessage && (
         <p style={{ color: 'green', marginBottom: '10px' }}>{saveMessage}</p>
       )}
       <div style={{ marginBottom: '8px', fontSize: '13px', color: '#666' }}>
-        🔴 Search results &nbsp;&nbsp;
-        🟢 Highly accessible &nbsp;&nbsp;
-        🟡 Fair &nbsp;&nbsp;
-        🔴 Not accessible &nbsp;&nbsp;
-        🔵 Not yet rated
+        Red — search results &nbsp;&nbsp;
+        Green — highly accessible &nbsp;&nbsp;
+        Yellow — fair &nbsp;&nbsp;
+        Red — not accessible &nbsp;&nbsp;
+        Blue — not yet rated
 </div>
       <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
         <Map
@@ -147,18 +149,18 @@ export function MapView() {
           center={searched ? mapCenter : undefined}
           mapId="accessibility-tracker-map"
         >
-          {/* Search result markers - red */}
+          {/* Search result markers: red */}
           {places.map(place => (
             <AdvancedMarker
               key={place.place_id}
               position={place.geometry.location}
               onClick={() => { setSelectedPlace(place); setSelectedBusiness(null); }}
             >
-              <Pin background="#EA4335" borderColor="#B31412" glyphColor="white" />
+              <Pin background="#B71C1C" borderColor="#7B0000" glyphColor="white" />
             </AdvancedMarker>
           ))}
 
-          {/* Saved business markers - color coded by score */}
+          {/* Saved business markers. Color coded by score */}
           {businesses.map(business => {
             const colors = getMarkerColor(business.overall_accessibility_score);
             return (
@@ -190,7 +192,7 @@ export function MapView() {
                 )}
                 <button
                   onClick={() => saveBusiness(selectedPlace)}
-                  style={{ padding: '6px 12px', backgroundColor: '#1E4D8C', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+                  style={{ padding: '6px 12px', backgroundColor: '#00ACC1', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
                 >
                   Save to Tracker
                 </button>
@@ -207,20 +209,20 @@ export function MapView() {
               <div style={{ minWidth: '200px' }}>
                 <h3 style={{ margin: '0 0 4px' }}>{selectedBusiness.name}</h3>
                 <p style={{ margin: '0 0 4px' }}>{selectedBusiness.address}</p>
-                <p style={{ margin: '0 0 8px', color: '#1E4D8C', fontWeight: 'bold' }}>Saved to Tracker</p>
+                <p style={{ margin: '0 0 8px', color: '#00ACC1', fontWeight: 'bold' }}>Saved to Tracker</p>
                 {selectedBusiness.overall_accessibility_score && (
                   <p style={{ margin: '0 0 8px' }}>Score: {Number(selectedBusiness.overall_accessibility_score).toFixed(1)}/5</p>
                 )}
                 <div style={{ display: 'flex', gap: '8px' }}>
                   <button
                     onClick={() => setShowBusinessDetail(true)}
-                    style={{ padding: '6px 12px', backgroundColor: '#1E4D8C', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+                    style={{ padding: '6px 12px', backgroundColor: '#00ACC1', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
                   >
                     View Details
                   </button>
                   <button
                     onClick={() => setShowReviewForm(true)}
-                    style={{ padding: '6px 12px', backgroundColor: '#27AE60', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+                    style={{ padding: '6px 12px', backgroundColor: '#2E7D32', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
                   >
                    Rate
                   </button>

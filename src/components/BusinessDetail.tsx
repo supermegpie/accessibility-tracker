@@ -21,7 +21,7 @@ interface BusinessDetailProps {
 }
 
 function ScoreBar({ label, score }: { label: string; score: number }) {
-  const color = score >= 4 ? '#27AE60' : score >= 3 ? '#F39C12' : '#E74C3C';
+  const color = score >= 4 ? '#2E7D32' : score >= 3 ? '#E65100' : '#B71C1C';
   return (
     <div style={{ marginBottom: '12px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
@@ -58,7 +58,7 @@ export function BusinessDetail({ business, onClose, onRateClick }: BusinessDetai
   };
 
   const overallScore = business.overall_accessibility_score;
-  const scoreColor = overallScore >= 4 ? '#27AE60' : overallScore >= 3 ? '#F39C12' : overallScore ? '#E74C3C' : '#1E4D8C';
+  const scoreColor = overallScore >= 4 ? '#2E7D32' : overallScore >= 3 ? '#E65100' : overallScore ? '#B71C1C' : '#00ACC1';
 
   return (
     <div style={{
@@ -75,10 +75,10 @@ export function BusinessDetail({ business, onClose, onRateClick }: BusinessDetai
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
           <div>
-            <h2 style={{ margin: '0 0 4px', color: '#1E4D8C' }}>{business.name}</h2>
+            <h2 style={{ margin: '0 0 4px', color: '#00ACC1' }}>{business.name}</h2>
             <p style={{ margin: 0, color: '#666', fontSize: '14px' }}>{business.address}</p>
           </div>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', fontSize: '20px', cursor: 'pointer', color: '#666' }}>✕</button>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', fontSize: '20px', cursor: 'pointer', color: '#666' }}>x</button>
         </div>
 
         {/* Overall Score */}
@@ -105,11 +105,11 @@ export function BusinessDetail({ business, onClose, onRateClick }: BusinessDetai
         {reviews.length > 0 && (
           <div style={{ marginBottom: '20px' }}>
             <h3 style={{ margin: '0 0 12px', fontSize: '16px' }}>Score Breakdown</h3>
-            <ScoreBar label="Wheelchair & Mobility Access" score={avgScore('mobility_score')} />
+            <ScoreBar label="Mobility & Physical Access" score={avgScore('mobility_score')} />
             <ScoreBar label="Sensory Accessibility" score={avgScore('sensory_score')} />
             <ScoreBar label="Staff & Service Quality" score={avgScore('service_score')} />
-            <ScoreBar label="Accessible Restrooms" score={avgScore('restroom_score')} />
-            <ScoreBar label="Accessible Parking" score={avgScore('parking_score')} />
+            <ScoreBar label="Parking & Transportation" score={avgScore('restroom_score')} />
+            <ScoreBar label="Accessible Restrooms" score={avgScore('parking_score')} />
           </div>
         )}
 
@@ -117,7 +117,7 @@ export function BusinessDetail({ business, onClose, onRateClick }: BusinessDetai
         <button
           onClick={onRateClick}
           style={{
-            width: '100%', padding: '12px', backgroundColor: '#27AE60',
+            width: '100%', padding: '12px', backgroundColor: '#2E7D32',
             color: 'white', border: 'none', borderRadius: '4px',
             cursor: 'pointer', fontWeight: 'bold', fontSize: '16px',
             marginBottom: '20px'
@@ -147,11 +147,11 @@ export function BusinessDetail({ business, onClose, onRateClick }: BusinessDetai
               </span>
             </div>
             <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '6px' }}>
-              <span style={{ fontSize: '12px', backgroundColor: '#f0f0f0', padding: '2px 8px', borderRadius: '12px' }}>Mobility: {review.mobility_score}/5</span>
+              <span style={{ fontSize: '12px', backgroundColor: '#f0f0f0', padding: '2px 8px', borderRadius: '12px' }}>Mobility & Physical Access: {review.mobility_score}/5</span>
               <span style={{ fontSize: '12px', backgroundColor: '#f0f0f0', padding: '2px 8px', borderRadius: '12px' }}>Sensory: {review.sensory_score}/5</span>
               <span style={{ fontSize: '12px', backgroundColor: '#f0f0f0', padding: '2px 8px', borderRadius: '12px' }}>Service: {review.service_score}/5</span>
-              <span style={{ fontSize: '12px', backgroundColor: '#f0f0f0', padding: '2px 8px', borderRadius: '12px' }}>Restroom: {review.restroom_score}/5</span>
-              <span style={{ fontSize: '12px', backgroundColor: '#f0f0f0', padding: '2px 8px', borderRadius: '12px' }}>Parking: {review.parking_score}/5</span>
+              <span style={{ fontSize: '12px', backgroundColor: '#f0f0f0', padding: '2px 8px', borderRadius: '12px' }}>Parking & Transportation: {review.restroom_score}/5</span>
+              <span style={{ fontSize: '12px', backgroundColor: '#f0f0f0', padding: '2px 8px', borderRadius: '12px' }}>Accessible Restrooms: {review.parking_score}/5</span>
             </div>
             {review.comment && (
               <p style={{ margin: 0, fontSize: '14px', color: '#444' }}>{review.comment}</p>

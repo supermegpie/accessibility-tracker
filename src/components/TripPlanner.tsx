@@ -23,7 +23,7 @@ interface TripPlannerProps {
 }
 
 function ScoreBadge({ score }: { score: number }) {
-  const color = score >= 70 ? '#27AE60' : score >= 50 ? '#F39C12' : '#E74C3C';
+  const color = score >= 70 ? '#2E7D32' : score >= 50 ? '#E65100' : '#B71C1C';
   const label = score >= 70 ? 'Highly Accessible' : score >= 50 ? 'Moderately Accessible' : 'Limited Accessibility';
   return (
     <div style={{ textAlign: 'center' }}>
@@ -119,11 +119,11 @@ export function TripPlanner({ user: _user }: TripPlannerProps) {
   return (
     <div style={{ maxWidth: '800px', margin: '0 auto', padding: '16px' }}>
       <div style={{ marginBottom: '24px' }}>
-        <h2 style={{ margin: '0 0 8px', color: '#1E4D8C', fontSize: '24px' }}>
+        <h2 style={{ margin: '0 0 8px', color: '#00ACC1', fontSize: '24px' }}>
           Accessible Trip Planner
         </h2>
         <p style={{ margin: 0, color: '#666', fontSize: '14px' }}>
-          Find the top 5 most accessible destinations based on Google data, community reviews, and real-time CTA, Metra, and Pace transit status.
+          Search for any type of business and we will find the 5 most accessible options near you, using Google data, community reviews, and real-time transit status.
         </p>
       </div>
 
@@ -139,7 +139,7 @@ export function TripPlanner({ user: _user }: TripPlannerProps) {
             </label>
             <input
               type="text"
-              placeholder="e.g. Italian restaurant, sports bar, coffee shop"
+              placeholder="e.g. coffee shop, Italian restaurant, pharmacy"
               value={query}
               onChange={e => setQuery(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && search()}
@@ -170,7 +170,7 @@ export function TripPlanner({ user: _user }: TripPlannerProps) {
               onClick={search}
               disabled={loading || !query}
               style={{
-                padding: '10px 24px', backgroundColor: '#1E4D8C',
+                padding: '10px 24px', backgroundColor: '#00ACC1',
                 color: 'white', border: 'none', borderRadius: '4px',
                 cursor: loading ? 'not-allowed' : 'pointer',
                 fontWeight: 'bold', fontSize: '15px',
@@ -186,11 +186,11 @@ export function TripPlanner({ user: _user }: TripPlannerProps) {
       {searched && (
         <div style={{ marginBottom: '16px' }}>
           <div style={{
-            backgroundColor: hasOutages ? '#FFF3CD' : '#D4EDDA',
-            border: hasOutages ? '1px solid #F39C12' : '1px solid #27AE60',
+            backgroundColor: hasOutages ? '#FFF3E0' : '#E8F5E9',
+            border: hasOutages ? '1px solid #E65100' : '1px solid #2E7D32',
             borderRadius: '6px', padding: '12px 16px',
             marginBottom: '8px', fontSize: '14px',
-            color: hasOutages ? '#856404' : '#155724'
+            color: hasOutages ? '#E65100' : '#1B5E20'
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '8px' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
@@ -220,31 +220,31 @@ export function TripPlanner({ user: _user }: TripPlannerProps) {
               <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                 {isChicago && ctaOutages > 0 && (
                   <a href="https://www.transitchicago.com/alerts/" target="_blank" rel="noopener noreferrer"
-                    style={{ backgroundColor: '#F39C12', color: 'white', padding: '4px 12px', borderRadius: '4px', fontSize: '13px', fontWeight: 'bold', textDecoration: 'none', whiteSpace: 'nowrap' }}>
+                    style={{ backgroundColor: '#E65100', color: 'white', padding: '4px 12px', borderRadius: '4px', fontSize: '13px', fontWeight: 'bold', textDecoration: 'none', whiteSpace: 'nowrap' }}>
                     CTA Alerts
                   </a>
                 )}
                 {isChicago && metraOutages > 0 && (
                   <a href="https://metrarail.com/metra-accessibility" target="_blank" rel="noopener noreferrer"
-                    style={{ backgroundColor: '#F39C12', color: 'white', padding: '4px 12px', borderRadius: '4px', fontSize: '13px', fontWeight: 'bold', textDecoration: 'none', whiteSpace: 'nowrap' }}>
+                    style={{ backgroundColor: '#E65100', color: 'white', padding: '4px 12px', borderRadius: '4px', fontSize: '13px', fontWeight: 'bold', textDecoration: 'none', whiteSpace: 'nowrap' }}>
                     Metra Accessibility Info
                   </a>
                 )}
                 {isNYC && (
                   <a href="https://www.mta.info/elevator-escalator-status" target="_blank" rel="noopener noreferrer"
-                    style={{ backgroundColor: ctaOutages > 0 ? '#F39C12' : '#27AE60', color: 'white', padding: '4px 12px', borderRadius: '4px', fontSize: '13px', fontWeight: 'bold', textDecoration: 'none', whiteSpace: 'nowrap' }}>
+                    style={{ backgroundColor: ctaOutages > 0 ? '#E65100' : '#2E7D32', color: 'white', padding: '4px 12px', borderRadius: '4px', fontSize: '13px', fontWeight: 'bold', textDecoration: 'none', whiteSpace: 'nowrap' }}>
                     MTA Accessibility Status
                   </a>
                 )}
                 {isSeattle && (
                   <a href="https://www.soundtransit.org/ride-with-us/service-alerts" target="_blank" rel="noopener noreferrer"
-                    style={{ backgroundColor: '#27AE60', color: 'white', padding: '4px 12px', borderRadius: '4px', fontSize: '13px', fontWeight: 'bold', textDecoration: 'none', whiteSpace: 'nowrap' }}>
+                    style={{ backgroundColor: '#2E7D32', color: 'white', padding: '4px 12px', borderRadius: '4px', fontSize: '13px', fontWeight: 'bold', textDecoration: 'none', whiteSpace: 'nowrap' }}>
                     Sound Transit Accessibility
                   </a>
                 )}
                 {isSeattle && (
                   <a href="https://kingcounty.gov/en/dept/metro/rider-tools/service-advisories" target="_blank" rel="noopener noreferrer"
-                    style={{ backgroundColor: '#27AE60', color: 'white', padding: '4px 12px', borderRadius: '4px', fontSize: '13px', fontWeight: 'bold', textDecoration: 'none', whiteSpace: 'nowrap' }}>
+                    style={{ backgroundColor: '#2E7D32', color: 'white', padding: '4px 12px', borderRadius: '4px', fontSize: '13px', fontWeight: 'bold', textDecoration: 'none', whiteSpace: 'nowrap' }}>
                     King County Metro Accessibility
                   </a>
                 )}
@@ -256,7 +256,7 @@ export function TripPlanner({ user: _user }: TripPlannerProps) {
                     target="_blank"
                     rel="noopener noreferrer"
                     style={{
-                      backgroundColor: '#F39C12', color: 'white',
+                      backgroundColor: '#E65100', color: 'white',
                       padding: '4px 12px', borderRadius: '4px',
                       fontSize: '13px', fontWeight: 'bold',
                       textDecoration: 'none', whiteSpace: 'nowrap'
@@ -271,7 +271,7 @@ export function TripPlanner({ user: _user }: TripPlannerProps) {
                     target="_blank"
                     rel="noopener noreferrer"
                     style={{
-                      backgroundColor: '#F39C12', color: 'white',
+                      backgroundColor: '#E65100', color: 'white',
                       padding: '4px 12px', borderRadius: '4px',
                       fontSize: '13px', fontWeight: 'bold',
                       textDecoration: 'none', whiteSpace: 'nowrap'
@@ -289,7 +289,7 @@ export function TripPlanner({ user: _user }: TripPlannerProps) {
               onClick={shareResults}
               disabled={sharing}
               style={{
-                padding: '8px 16px', backgroundColor: '#27AE60',
+                padding: '8px 16px', backgroundColor: '#2E7D32',
                 color: 'white', border: 'none', borderRadius: '4px',
                 cursor: 'pointer', fontWeight: 'bold', fontSize: '14px'
               }}
@@ -297,7 +297,7 @@ export function TripPlanner({ user: _user }: TripPlannerProps) {
               {sharing ? 'Copying...' : 'Share Results'}
             </button>
             {shareUrl && (
-              <span style={{ fontSize: '13px', color: '#27AE60', fontWeight: 'bold' }}>
+              <span style={{ fontSize: '13px', color: '#2E7D32', fontWeight: 'bold' }}>
                 Link copied to clipboard!
               </span>
             )}
@@ -306,14 +306,14 @@ export function TripPlanner({ user: _user }: TripPlannerProps) {
       )}
 
       {error && (
-        <div style={{ backgroundColor: '#F8D7DA', border: '1px solid #E74C3C', borderRadius: '6px', padding: '12px 16px', marginBottom: '16px', color: '#721C24' }}>
+        <div style={{ backgroundColor: '#FFEBEE', border: '1px solid #B71C1C', borderRadius: '6px', padding: '12px 16px', marginBottom: '16px', color: '#B71C1C' }}>
           {error}
         </div>
       )}
 
       {loading && (
         <div style={{ textAlign: 'center', padding: '40px', color: '#666' }}>
-          <div style={{ fontSize: '32px', marginBottom: '12px' }}>♿</div>
+          <div style={{ fontSize: '32px', marginBottom: '12px' }}></div>
           <p>Searching for accessible destinations...</p>
           <p style={{ fontSize: '13px' }}>Checking Google Places, community reviews, CTA, Metra and Pace status</p>
         </div>
@@ -328,7 +328,7 @@ export function TripPlanner({ user: _user }: TripPlannerProps) {
       {searched && !loading && results.length > 0 && (
         <div>
           <div style={{ marginBottom: '20px' }}>
-            <h3 style={{ margin: '0 0 12px', color: '#1E4D8C' }}>
+            <h3 style={{ margin: '0 0 12px', color: '#00ACC1' }}>
               Top {results.length} Accessible Results for {query}
             </h3>
             <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
@@ -344,7 +344,7 @@ export function TripPlanner({ user: _user }: TripPlannerProps) {
                     position={{ lat: result.location.lat, lng: result.location.lng }}
                   >
                     <Pin
-                      background={result.accessibility_score >= 70 ? '#27AE60' : result.accessibility_score >= 50 ? '#F39C12' : '#E74C3C'}
+                      background={result.accessibility_score >= 70 ? '#2E7D32' : result.accessibility_score >= 50 ? '#E65100' : '#B71C1C'}
                       borderColor="#333"
                       glyph={String(index + 1)}
                       glyphColor="white"
@@ -360,12 +360,12 @@ export function TripPlanner({ user: _user }: TripPlannerProps) {
               backgroundColor: 'white', borderRadius: '8px',
               padding: '20px', marginBottom: '16px',
               boxShadow: '0 1px 4px rgba(0,0,0,0.1)',
-              borderLeft: '4px solid ' + (result.accessibility_score >= 70 ? '#27AE60' : result.accessibility_score >= 50 ? '#F39C12' : '#E74C3C')
+              borderLeft: '4px solid ' + (result.accessibility_score >= 70 ? '#2E7D32' : result.accessibility_score >= 50 ? '#E65100' : '#B71C1C')
             }}>
               <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
                 <div style={{
                   width: '32px', height: '32px', borderRadius: '50%',
-                  backgroundColor: '#1E4D8C', color: 'white',
+                  backgroundColor: '#00ACC1', color: 'white',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   fontWeight: 'bold', flexShrink: 0
                 }}>
@@ -374,11 +374,11 @@ export function TripPlanner({ user: _user }: TripPlannerProps) {
                 <div style={{ flex: 1 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '8px' }}>
                     <div>
-                      <h3 style={{ margin: '0 0 4px', fontSize: '18px', color: '#1E4D8C' }}>{result.name}</h3>
+                      <h3 style={{ margin: '0 0 4px', fontSize: '18px', color: '#00ACC1' }}>{result.name}</h3>
                       <p style={{ margin: '0 0 8px', color: '#666', fontSize: '14px' }}>{result.address}</p>
                       <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '12px' }}>
                         {result.google_accessible && (
-                          <span style={{ backgroundColor: '#D4EDDA', color: '#155724', padding: '2px 10px', borderRadius: '12px', fontSize: '12px', fontWeight: 'bold' }}>
+                          <span style={{ backgroundColor: '#E8F5E9', color: '#1B5E20', padding: '2px 10px', borderRadius: '12px', fontSize: '12px', fontWeight: 'bold' }}>
                             Google Verified Accessible
                           </span>
                         )}
@@ -388,7 +388,7 @@ export function TripPlanner({ user: _user }: TripPlannerProps) {
                           </span>
                         )}
                         {result.community_score && (
-                          <span style={{ backgroundColor: '#D4EDDA', color: '#155724', padding: '2px 10px', borderRadius: '12px', fontSize: '12px' }}>
+                          <span style={{ backgroundColor: '#E8F5E9', color: '#1B5E20', padding: '2px 10px', borderRadius: '12px', fontSize: '12px' }}>
                             {Number(result.community_score).toFixed(1)}/5 Community Score
                           </span>
                         )}
@@ -404,7 +404,7 @@ export function TripPlanner({ user: _user }: TripPlannerProps) {
 
                   {result.factors.length > 0 && (
                     <div style={{ marginBottom: '8px' }}>
-                      <div style={{ fontSize: '13px', fontWeight: 'bold', color: '#27AE60', marginBottom: '4px' }}>
+                      <div style={{ fontSize: '13px', fontWeight: 'bold', color: '#2E7D32', marginBottom: '4px' }}>
                         Why it ranked well:
                       </div>
                       {result.factors.map((factor, i) => (
@@ -417,11 +417,11 @@ export function TripPlanner({ user: _user }: TripPlannerProps) {
 
                   {result.warnings.length > 0 && (
                     <div style={{ marginBottom: '12px' }}>
-                      <div style={{ fontSize: '13px', fontWeight: 'bold', color: '#F39C12', marginBottom: '4px' }}>
+                      <div style={{ fontSize: '13px', fontWeight: 'bold', color: '#E65100', marginBottom: '4px' }}>
                         Things to know:
                       </div>
                       {result.warnings.map((warning, i) => (
-                        <div key={i} style={{ fontSize: '13px', color: '#856404', marginBottom: '2px' }}>
+                        <div key={i} style={{ fontSize: '13px', color: '#E65100', marginBottom: '2px' }}>
                           {warning}
                         </div>
                       ))}
@@ -435,7 +435,7 @@ export function TripPlanner({ user: _user }: TripPlannerProps) {
                     style={{
                       display: 'inline-block',
                       padding: '8px 16px',
-                      backgroundColor: '#1E4D8C',
+                      backgroundColor: '#00ACC1',
                       color: 'white',
                       borderRadius: '4px',
                       textDecoration: 'none',

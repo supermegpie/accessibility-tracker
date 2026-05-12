@@ -28,7 +28,7 @@ interface CityStats {
 
 function ScoreCircle({ score, label }: { score: string | null; label: string }) {
   const num = score ? Number(score) : 0;
-  const color = num >= 4 ? '#27AE60' : num >= 3 ? '#F39C12' : num > 0 ? '#E74C3C' : '#999';
+  const color = num >= 4 ? '#2E7D32' : num >= 3 ? '#E65100' : num > 0 ? '#B71C1C' : '#999';
   return (
     <div style={{ textAlign: 'center', padding: '8px' }}>
       <div style={{
@@ -72,13 +72,14 @@ export function CityDashboard({ onClose }: CityDashboardProps) {
         maxHeight: '90vh', overflowY: 'auto'
       }}>
         {/* Header */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px' }}>
           <div>
-            <h2 style={{ margin: '0 0 4px', color: '#1E4D8C' }}>City Accessibility Dashboard</h2>
-            <p style={{ margin: 0, color: '#666', fontSize: '14px' }}>Community-powered accessibility data</p>
+            <h2 style={{ margin: '0 0 4px', color: '#F06292' }}>City Accessibility Dashboard</h2>
+            <p style={{ margin: 0, color: '#666', fontSize: '14px' }}>Accessibility scores based on reviews from your community members</p>
           </div>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', fontSize: '20px', cursor: 'pointer', color: '#666' }}>✕</button>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', fontSize: '20px', cursor: 'pointer', color: '#666' }}>x</button>
         </div>
+
 
         {loading && <p style={{ color: '#666' }}>Loading stats...</p>}
 
@@ -86,24 +87,24 @@ export function CityDashboard({ onClose }: CityDashboardProps) {
           <>
             {/* Overall Stats */}
             <div style={{
-              backgroundColor: '#f8f9fa', borderRadius: '8px',
+              backgroundColor: '#E0F7FA', borderRadius: '8px',
               padding: '16px', marginBottom: '20px'
             }}>
               <div style={{ display: 'flex', justifyContent: 'space-around', marginBottom: '16px' }}>
                 <div style={{ textAlign: 'center' }}>
-                  <div style={{ fontSize: '32px', fontWeight: 'bold', color: '#1E4D8C' }}>
+                  <div style={{ fontSize: '32px', fontWeight: 'bold', color: '#00ACC1' }}>
                     {stats.overall.total_businesses}
                   </div>
                   <div style={{ fontSize: '13px', color: '#666' }}>Businesses Tracked</div>
                 </div>
                 <div style={{ textAlign: 'center' }}>
-                  <div style={{ fontSize: '32px', fontWeight: 'bold', color: '#27AE60' }}>
+                  <div style={{ fontSize: '32px', fontWeight: 'bold', color: '#2E7D32' }}>
                     {stats.overall.avg_overall_score ? Number(stats.overall.avg_overall_score).toFixed(1) : 'N/A'}
                   </div>
                   <div style={{ fontSize: '13px', color: '#666' }}>Avg Accessibility Score</div>
                 </div>
                 <div style={{ textAlign: 'center' }}>
-                  <div style={{ fontSize: '32px', fontWeight: 'bold', color: '#1E4D8C' }}>
+                  <div style={{ fontSize: '32px', fontWeight: 'bold', color: '#00ACC1' }}>
                     {stats.overall.total_reviews}
                   </div>
                   <div style={{ fontSize: '13px', color: '#666' }}>Community Reviews</div>
@@ -112,24 +113,23 @@ export function CityDashboard({ onClose }: CityDashboardProps) {
 
               {/* Score Breakdown */}
               <div style={{ display: 'flex', justifyContent: 'space-around', flexWrap: 'wrap' }}>
-                <ScoreCircle score={stats.overall.avg_mobility} label="Mobility" />
+                <ScoreCircle score={stats.overall.avg_mobility} label="Mobility & Physical" />
                 <ScoreCircle score={stats.overall.avg_sensory} label="Sensory" />
                 <ScoreCircle score={stats.overall.avg_service} label="Service" />
-                <ScoreCircle score={stats.overall.avg_restroom} label="Restrooms" />
-                <ScoreCircle score={stats.overall.avg_parking} label="Parking" />
+                <ScoreCircle score={stats.overall.avg_restroom} label="Parking & Transit" />
               </div>
             </div>
 
             {/* Top Businesses */}
             {stats.topBusinesses.length > 0 && (
               <div style={{ marginBottom: '20px' }}>
-                <h3 style={{ margin: '0 0 12px', fontSize: '16px', color: '#1E4D8C' }}>
+                <h3 style={{ margin: '0 0 12px', fontSize: '16px', color: '#F06292' }}>
                   Top Rated Businesses
                 </h3>
                 {stats.topBusinesses.map((business, index) => (
                   <div key={business.id} style={{
                     display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                    padding: '10px', backgroundColor: index % 2 === 0 ? '#f8f9fa' : 'white',
+                    padding: '10px', backgroundColor: index % 2 === 0 ? '#E0F7FA' : 'white',
                     borderRadius: '4px', marginBottom: '4px'
                   }}>
                     <div>
@@ -137,7 +137,7 @@ export function CityDashboard({ onClose }: CityDashboardProps) {
                       <div style={{ fontSize: '12px', color: '#666' }}>{business.address}</div>
                     </div>
                     <div style={{
-                      backgroundColor: Number(business.overall_accessibility_score) >= 4 ? '#27AE60' : '#F39C12',
+                      backgroundColor: Number(business.overall_accessibility_score) >= 4 ? '#2E7D32' : '#E65100',
                       color: 'white', padding: '4px 10px', borderRadius: '12px',
                       fontWeight: 'bold', fontSize: '14px', whiteSpace: 'nowrap'
                     }}>
@@ -151,12 +151,12 @@ export function CityDashboard({ onClose }: CityDashboardProps) {
             {/* By Business Type */}
             {stats.byType.length > 0 && (
               <div>
-                <h3 style={{ margin: '0 0 12px', fontSize: '16px', color: '#1E4D8C' }}>
+                <h3 style={{ margin: '0 0 12px', fontSize: '16px', color: '#F06292' }}>
                   By Business Type
                 </h3>
                 <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}>
                   <thead>
-                    <tr style={{ backgroundColor: '#1E4D8C', color: 'white' }}>
+                    <tr style={{ backgroundColor: '#00ACC1', color: 'white' }}>
                       <th style={{ padding: '8px 12px', textAlign: 'left' }}>Type</th>
                       <th style={{ padding: '8px 12px', textAlign: 'center' }}>Businesses</th>
                       <th style={{ padding: '8px 12px', textAlign: 'center' }}>Avg Score</th>
@@ -165,7 +165,7 @@ export function CityDashboard({ onClose }: CityDashboardProps) {
                   </thead>
                   <tbody>
                     {stats.byType.map((row, index) => (
-                      <tr key={row.business_type} style={{ backgroundColor: index % 2 === 0 ? '#f8f9fa' : 'white' }}>
+                      <tr key={row.business_type} style={{ backgroundColor: index % 2 === 0 ? '#E0F7FA' : 'white' }}>
                         <td style={{ padding: '8px 12px', textTransform: 'capitalize' }}>{row.business_type}</td>
                         <td style={{ padding: '8px 12px', textAlign: 'center' }}>{row.total_businesses}</td>
                         <td style={{ padding: '8px 12px', textAlign: 'center' }}>

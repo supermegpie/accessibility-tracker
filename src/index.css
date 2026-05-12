@@ -5,16 +5,16 @@
 }
 
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f5f7fa;
+  font-family: 'Poppins', Arial, sans-serif;
+  background-color: #E0F7FA;
   -webkit-font-smoothing: antialiased;
 }
 
 input, select, textarea, button {
-  font-family: Arial, sans-serif;
+  font-family: 'Poppins', Arial, sans-serif;
 }
 
-/* Make map full width on mobile */
+/* Make map full width on mobile devices */
 @media (max-width: 600px) {
   .search-bar {
     flex-direction: column;

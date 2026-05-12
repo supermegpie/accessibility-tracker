@@ -15,11 +15,11 @@ interface ScoreField {
 }
 
 const scoreFields: ScoreField[] = [
-  { key: 'mobility_score', label: 'Wheelchair & Mobility Access', emoji: '' },
+  { key: 'mobility_score', label: 'Mobility & Physical Access', emoji: '' },
   { key: 'sensory_score', label: 'Sensory Accessibility', emoji: '' },
   { key: 'service_score', label: 'Staff & Service Quality', emoji: '' },
-  { key: 'restroom_score', label: 'Accessible Restrooms', emoji: '' },
-  { key: 'parking_score', label: 'Accessible Parking', emoji: '' },
+  { key: 'restroom_score', label: 'Parking & Transportation', emoji: '' },
+  { key: 'parking_score', label: 'Accessible Restrooms', emoji: '' },
 ];
 
 export function ReviewForm({ businessId, businessName, onClose, onSubmitted }: ReviewFormProps) {
@@ -81,8 +81,9 @@ export function ReviewForm({ businessId, businessName, onClose, onSubmitted }: R
         padding: '24px', width: '480px', maxWidth: '90vw',
         maxHeight: '90vh', overflowY: 'auto'
       }}>
-        <h2 style={{ margin: '0 0 4px', color: '#1E4D8C' }}>Rate Accessibility</h2>
-        <p style={{ margin: '0 0 20px', color: '#666' }}>{businessName}</p>
+        <h2 style={{ margin: '0 0 4px', color: '#F06292' }}>Share Your Experience</h2>
+        <p style={{ margin: '0 0 4px', color: '#666' }}>{businessName}</p>
+          <p style={{ margin: '0 0 20px', color: '#999', fontSize: '13px' }}>Your review helps others in the community find accessible places.</p>
 
         {scoreFields.map(field => (
           <div key={field.key} style={{ marginBottom: '16px' }}>
@@ -97,8 +98,8 @@ export function ReviewForm({ businessId, businessName, onClose, onSubmitted }: R
                   style={{
                     width: '40px', height: '40px', borderRadius: '4px',
                     border: '2px solid',
-                    borderColor: scores[field.key] === score ? '#1E4D8C' : '#ddd',
-                    backgroundColor: scores[field.key] === score ? '#1E4D8C' : 'white',
+                    borderColor: scores[field.key] === score ? '#00ACC1' : '#ddd',
+                    backgroundColor: scores[field.key] === score ? '#00ACC1' : 'white',
                     color: scores[field.key] === score ? 'white' : '#333',
                     cursor: 'pointer', fontWeight: 'bold', fontSize: '16px'
                   }}
@@ -141,7 +142,7 @@ export function ReviewForm({ businessId, businessName, onClose, onSubmitted }: R
           <button
             onClick={handleSubmit}
             disabled={submitting}
-            style={{ padding: '10px 20px', borderRadius: '4px', border: 'none', cursor: 'pointer', backgroundColor: '#1E4D8C', color: 'white', fontWeight: 'bold' }}
+            style={{ padding: '10px 20px', borderRadius: '4px', border: 'none', cursor: 'pointer', backgroundColor: '#00ACC1', color: 'white', fontWeight: 'bold' }}
           >
             {submitting ? 'Submitting...' : 'Submit Review'}
           </button>

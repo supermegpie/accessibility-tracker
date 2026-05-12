@@ -14,11 +14,11 @@ export type { FilterState };
 export function AccessibilityFilter({ filters, onChange }: AccessibilityFilterProps) {
   return (
     <div style={{
-      backgroundColor: '#f8f9fa', borderRadius: '8px',
+      backgroundColor: '#E0F7FA', borderRadius: '8px',
       padding: '12px 16px', marginBottom: '12px',
       display: 'flex', gap: '16px', flexWrap: 'wrap', alignItems: 'center'
     }}>
-      <span style={{ fontWeight: 'bold', fontSize: '14px', color: '#1E4D8C' }}>
+      <span style={{ fontWeight: 'bold', fontSize: '14px', color: '#00ACC1' }}>
         Filter:
       </span>
 
@@ -46,7 +46,7 @@ export function AccessibilityFilter({ filters, onChange }: AccessibilityFilterPr
           style={{ padding: '4px 8px', borderRadius: '4px', border: '1px solid #ddd', fontSize: '14px' }}
         >
           <option value="all">All</option>
-          <option value="mobility">Wheelchair Access</option>
+          <option value="mobility">Mobility & Physical Access</option>
           <option value="sensory">Sensory</option>
           <option value="service">Service Quality</option>
           <option value="restroom">Restrooms</option>
