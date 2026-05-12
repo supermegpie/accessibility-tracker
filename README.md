@@ -1,6 +1,6 @@
 # Business Accessibility Tracker
 
-Accessibility Tracker is a community-driven web app built by and for people with disabilities. The idea is to give disabled travelers a place to find, rate, and share information about how accessible businesses actually are, based on real experiences from real people in the community.
+Accessibility Tracker is a community-driven web app built by and for people with disabilities. The idea is to provide disabled travelers a platform to find, rate, and share information about how accessible businesses actually are, based on real experiences from real people in the community.
 Users can search for businesses on an interactive map, leave structured accessibility reviews including comments with their personal experience, and use the Trip Planner to find the most accessible options for any search, with live transit status included.
 
 ## What It Does
@@ -22,10 +22,10 @@ Once a business is saved, anyone can submit a review across four categories:
   - Staff & Service Quality
   - Parking & Transit Access
 
-  Each business gets an overall score that updates automatically as new reviews come in.
+  Each business receives an overall score that updates automatically as new reviews are received.
 
 ### City Accessibility Dashboard
-A quick snapshot of how accessible a city is based on all the reviews in the tracker. Shows overall scores by category, top rated businesses, and a breakdown by business type.
+A quick snapshot of how accessible a city is based on all the reviews in the tracker. Shows overall scores by category, top-rated businesses, and a breakdown by business type.
 
 ### Accessible Trip Planner
 Search for any type of business (like "coffee shop" or "sports bar") and get back the top 5 most accessible options, ranked using a combination of:
@@ -34,8 +34,8 @@ Search for any type of business (like "coffee shop" or "sports bar") and get bac
 - Community review scores from the tracker
 - Real-time transit accessibility alerts (with more to come):
 
-Transit alerts are city-specific and only flagged if an outage is near the destination:
-  - **Chicago:** CTA elevator outages + Metra alerts + Pace Bus link
+Transit alerts are unique to the searched city and only flagged if an outage is near the destination:
+  - **Chicago:** CTA elevator outages, Metra alerts, and Pace Bus link
   - **New York City:** MTA elevator status
   - **Seattle:** Sound Transit + King County Metro alerts
 
@@ -43,11 +43,11 @@ Results include a mini map, a Get Directions button, and a shareable link you ca
 
 ## Tech Stack
 
-- **Frontend:** React + TypeScript, Vite
+- **Frontend:** React, TypeScript, Vite
 - **Routing:** React Router
-- **Maps:** Google Maps JavaScript API + Places API
+- **Maps:** Google Maps JavaScript API, Places API
 - **Auth:** Firebase Authentication
-- **Backend:** Node.js + Express (see backend repository)
+- **Backend:** Node.js, Express (see backend repository)
 - **Database:** PostgreSQL via Neon
 
 ## Getting Started On Building Your Own Tracker
