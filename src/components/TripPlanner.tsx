@@ -58,7 +58,7 @@ export function TripPlanner({ user: _user }: TripPlannerProps) {
 
   useEffect(() => {
     if (shareId) {
-      fetch('/api/trip-planner/share/' + shareId)
+      fetch((import.meta.env.VITE_API_URL || '') + '/api/trip-planner/share/' + shareId)
         .then(res => res.json())
         .then(data => {
           setQuery(data.query);
@@ -79,7 +79,7 @@ export function TripPlanner({ user: _user }: TripPlannerProps) {
     setShareUrl(null);
     try {
       const response = await fetch(
-        '/api/trip-planner/search?query=' + encodeURIComponent(query) + '&city=' + encodeURIComponent(city)
+        (import.meta.env.VITE_API_URL || '') + '/api/trip-planner/search?query=' + encodeURIComponent(query) + '&city=' + encodeURIComponent(city)
       );
       const data = await response.json();
       if (!response.ok) throw new Error(data.error);
@@ -99,7 +99,7 @@ export function TripPlanner({ user: _user }: TripPlannerProps) {
   const shareResults = async () => {
     setSharing(true);
     try {
-      const response = await fetch('/api/trip-planner/share', {
+      const response = await fetch((import.meta.env.VITE_API_URL || '') + '/api/trip-planner/share', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ query, city, results, cta_outages: ctaOutages })

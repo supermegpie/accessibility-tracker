@@ -46,7 +46,7 @@ export function BusinessDetail({ business, onClose, onRateClick }: BusinessDetai
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`/api/reviews/${business.id}`)
+    fetch((import.meta.env.VITE_API_URL || '') + `/api/reviews/${business.id}`)
       .then(res => res.json())
       .then(data => { setReviews(data); setLoading(false); })
       .catch(() => setLoading(false));

@@ -22,9 +22,10 @@ export function useBusinesses(minScore = 0, businessType = 'all') {
       if (minScore > 0) params.append('minScore', String(minScore));
       if (businessType !== 'all') params.append('businessType', businessType);
 
+      const baseUrl = import.meta.env.VITE_API_URL || '';
       const url = minScore > 0 || businessType !== 'all'
-        ? `/api/businesses/filter?${params.toString()}`
-        : '/api/businesses';
+        ? `${baseUrl}/api/businesses/filter?${params.toString()}`
+        : `${baseUrl}/api/businesses`;
 
       const response = await fetch(url);
       if (!response.ok) throw new Error('Network response was not ok');

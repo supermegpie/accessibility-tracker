@@ -42,7 +42,7 @@ export function MapView() {
     setSearched(false);
     try {
       const response = await fetch(
-        `/api/places/search?location=${encodeURIComponent(searchInput)}&type=restaurant`
+        (import.meta.env.VITE_API_URL || '') + `/api/places/search?location=${encodeURIComponent(searchInput)}&type=restaurant`
       );
       const data = await response.json();
       setPlaces(data.places);
@@ -56,7 +56,7 @@ export function MapView() {
 
   const saveBusiness = async (place: Place) => {
     try {
-      const response = await fetch('/api/businesses', {
+      const response = await fetch((import.meta.env.VITE_API_URL || '') + '/api/businesses', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
