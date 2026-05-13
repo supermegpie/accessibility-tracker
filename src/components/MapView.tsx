@@ -39,6 +39,7 @@ export function MapView({ onCitySearch }: MapViewProps) {
   const [filters, setFilters] = useState<FilterState>({ minScore: 0, category: 'all', businessType: 'all' });
   const { businesses, refetch } = useBusinesses(filters.minScore, filters.businessType);
   const [mapZoom, setMapZoom] = useState(13);
+  const [mapKey, setMapKey] = useState(0);
 
   /* Search for places using Google Places API */
   const searchPlaces = async () => {
@@ -165,9 +166,10 @@ export function MapView({ onCitySearch }: MapViewProps) {
 </div>
       <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
         <Map
+          key={mapKey}
           style={{ width: '100%', height: 'calc(100vh - 200px)', minHeight: '400px' }}
-          center={mapCenter}
-          zoom={mapZoom}
+          defaultCenter={mapCenter}
+          defaultZoom={mapZoom}
           mapId="accessibility-tracker-map"
         >
           {/* Search result markers: red */}
