@@ -185,7 +185,7 @@ export function MapView({ onCitySearch }: MapViewProps) {
           ))}
 
           {/* Saved business markers. Color coded by score */}
-          {businesses.map(business => {
+          {!businessQuery && businesses.map(business => {
             const colors = getMarkerColor(business.overall_accessibility_score);
             return (
               <AdvancedMarker
