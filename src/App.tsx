@@ -13,6 +13,7 @@ function App() {
   const [user, setUser] = useState<User | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
   const [showDashboard, setShowDashboard] = useState(false);
+  const [currentCity, setCurrentCity] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -117,14 +118,14 @@ function App() {
       {/* Routes */}
       <div style={{ padding: '12px', maxWidth: '1200px', margin: '0 auto' }}>
         <Routes>
-          <Route path="/" element={<MapView />} />
+          <Route path="/" element={<MapView onCitySearch={setCurrentCity} />} />
           <Route path="/trip-planner" element={<TripPlanner user={user} />} />
           <Route path="/trip-planner/share/:shareId" element={<TripPlanner user={user} />} />
           <Route path="/about" element={<About />} />
         </Routes>
       </div>
 
-      {showDashboard && <CityDashboard onClose={() => setShowDashboard(false)} />}
+      {showDashboard && <CityDashboard onClose={() => setShowDashboard(false)} city={currentCity} />}
       <Footer />
     </div>
   );

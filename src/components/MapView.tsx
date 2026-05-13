@@ -21,12 +21,17 @@ interface Place {
   };
 }
 
-export function MapView() {
+interface MapViewProps {
+  onCitySearch?: (city: string) => void;
+}
+
+export function MapView({ onCitySearch }: MapViewProps) {
   const [places, setPlaces] = useState<Place[]>([]);
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
   const [selectedBusiness, setSelectedBusiness] = useState<Business | null>(null);
   const [mapCenter, setMapCenter] = useState(CHICAGO_CENTER);
   const [searchInput, setSearchInput] = useState('');
+  const [businessQuery, setBusinessQuery] = useState('');
   const [loading, setLoading] = useState(false);
   const [saveMessage, setSaveMessage] = useState<string | null>(null);
   const [showReviewForm, setShowReviewForm] = useState(false);
@@ -42,12 +47,13 @@ export function MapView() {
     setSearched(false);
     try {
       const response = await fetch(
-        (import.meta.env.VITE_API_URL || '') + `/api/places/search?location=${encodeURIComponent(searchInput)}&type=restaurant`
+        (import.meta.env.VITE_API_URL || '') + `/api/places/search?location=${encodeURIComponent(searchInput)}&type=restaurant${businessQuery ? '&query=' + encodeURIComponent(businessQuery) : ''}`
       );
       const data = await response.json();
       setPlaces(data.places);
       setMapCenter(data.center);
       setSearched(true);
+      if (onCitySearch) onCitySearch(searchInput);
     } catch (error) {
       console.error('Search failed:', error);
     }
@@ -100,6 +106,21 @@ export function MapView() {
           placeholder="Enter a city or neighborhood"
           value={searchInput}
           onChange={e => setSearchInput(e.target.value)}
+          onKeyDown={e => e.key === 'Enter' && searchPlaces()}
+          style={{
+            padding: '10px',
+            flex: '1',
+            minWidth: '200px',
+            borderRadius: '4px',
+            border: '1px solid #ddd',
+            fontSize: '16px'
+          }}
+        />
+        <input
+          type="text"
+          placeholder="Search for a specific business (optional)"
+          value={businessQuery}
+          onChange={e => setBusinessQuery(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && searchPlaces()}
           style={{
             padding: '10px',

@@ -46,14 +46,15 @@ function ScoreCircle({ score, label }: { score: string | null; label: string }) 
 
 interface CityDashboardProps {
   onClose: () => void;
+  city?: string;
 }
 
-export function CityDashboard({ onClose }: CityDashboardProps) {
+export function CityDashboard({ onClose, city }: CityDashboardProps) {
   const [stats, setStats] = useState<CityStats | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch((import.meta.env.VITE_API_URL || '') + '/api/cities/stats')
+    fetch((import.meta.env.VITE_API_URL || '') + `/api/cities/stats${city ? '?city=' + encodeURIComponent(city) : ''}`)
       .then(res => res.json())
       .then(data => { setStats(data); setLoading(false); })
       .catch(() => setLoading(false));
@@ -74,7 +75,7 @@ export function CityDashboard({ onClose }: CityDashboardProps) {
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px' }}>
           <div>
-            <h2 style={{ margin: '0 0 4px', color: '#F06292' }}>City Accessibility Dashboard</h2>
+            <h2 style={{ margin: '0 0 4px', color: '#F06292' }}>{city ? `${city} Accessibility` : 'City Accessibility Dashboard'}</h2>
             <p style={{ margin: 0, color: '#666', fontSize: '14px' }}>Accessibility scores based on reviews from your community members</p>
           </div>
           <button onClick={onClose} style={{ background: 'none', border: 'none', fontSize: '20px', cursor: 'pointer', color: '#666' }}>x</button>
