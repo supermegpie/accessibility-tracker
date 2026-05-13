@@ -7,7 +7,6 @@ import { MapView } from './components/MapView';
 import { CityDashboard } from './components/CityDashboard';
 import { TripPlanner } from './components/TripPlanner';
 import { About } from './components/About';
-import { Logo } from './components/Logo';
 import { Footer } from './components/Footer';
 
 function App() {
