@@ -79,10 +79,12 @@ export function MapView({ onCitySearch }: MapViewProps) {
       });
       const data = await response.json();
       setSaveMessage(data.message);
-      refetch();
+      await refetch();
       setTimeout(() => setSaveMessage(null), 3000);
+      return data.business;
     } catch (error) {
       console.error('Save failed:', error);
+      return null;
     }
   };
 
@@ -219,6 +221,12 @@ export function MapView({ onCitySearch }: MapViewProps) {
                   style={{ padding: '6px 12px', backgroundColor: '#00ACC1', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
                 >
                   Save to Tracker
+                </button>
+                <button
+                  onClick={async () => { const saved = await saveBusiness(selectedPlace); if (saved) { setSelectedBusiness(saved); setShowReviewForm(true); } }}
+                  style={{ padding: '6px 12px', backgroundColor: '#2E7D32', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+                >
+                  Save & Rate
                 </button>
               </div>
             </InfoWindow>
