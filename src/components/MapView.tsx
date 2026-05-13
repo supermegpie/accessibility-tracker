@@ -38,7 +38,6 @@ export function MapView({ onCitySearch }: MapViewProps) {
   const [showBusinessDetail, setShowBusinessDetail] = useState(false);
   const [filters, setFilters] = useState<FilterState>({ minScore: 0, category: 'all', businessType: 'all' });
   const { businesses, refetch } = useBusinesses(filters.minScore, filters.businessType);
-  const [searched, setSearched] = useState(false);
   const [mapZoom, setMapZoom] = useState(13);
 
   /* Search for places using Google Places API */
@@ -53,7 +52,7 @@ export function MapView({ onCitySearch }: MapViewProps) {
       const data = await response.json();
       setPlaces(data.places);
       setMapCenter(data.center);
-      setSearched(true);
+
       if (onCitySearch) onCitySearch(searchInput);
       // Zoom in more for specific business searches, less for city searches
       setMapZoom(businessQuery ? 15 : 13);
