@@ -44,7 +44,6 @@ export function MapView({ onCitySearch }: MapViewProps) {
   const searchPlaces = async () => {
     if (!searchInput) return;
     setLoading(true);
-    setSearched(false);
     try {
       const response = await fetch(
         (import.meta.env.VITE_API_URL || '') + `/api/places/search?location=${encodeURIComponent(searchInput)}&type=restaurant${businessQuery ? '&query=' + encodeURIComponent(businessQuery) : ''}`
