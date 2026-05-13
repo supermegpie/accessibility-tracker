@@ -39,6 +39,7 @@ export function MapView({ onCitySearch }: MapViewProps) {
   const [filters, setFilters] = useState<FilterState>({ minScore: 0, category: 'all', businessType: 'all' });
   const { businesses, refetch } = useBusinesses(filters.minScore, filters.businessType);
   const [searched, setSearched] = useState(false);
+  const [mapZoom, setMapZoom] = useState(13);
 
   /* Search for places using Google Places API */
   const searchPlaces = async () => {
@@ -54,6 +55,8 @@ export function MapView({ onCitySearch }: MapViewProps) {
       setMapCenter(data.center);
       setSearched(true);
       if (onCitySearch) onCitySearch(searchInput);
+      // Zoom in more for specific business searches, less for city searches
+      setMapZoom(businessQuery ? 15 : 13);
     } catch (error) {
       console.error('Search failed:', error);
     }
@@ -165,9 +168,8 @@ export function MapView({ onCitySearch }: MapViewProps) {
       <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
         <Map
           style={{ width: '100%', height: 'calc(100vh - 200px)', minHeight: '400px' }}
-          defaultCenter={mapCenter}
-          defaultZoom={13}
-          center={searched ? mapCenter : undefined}
+          center={mapCenter}
+          zoom={mapZoom}
           mapId="accessibility-tracker-map"
         >
           {/* Search result markers: red */}
