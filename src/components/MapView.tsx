@@ -56,6 +56,7 @@ export function MapView({ onCitySearch }: MapViewProps) {
       if (onCitySearch) onCitySearch(searchInput);
       // Zoom in more for specific business searches, less for city searches
       setMapZoom(businessQuery ? 15 : 13);
+      setMapKey(prev => prev + 1);
     } catch (error) {
       console.error('Search failed:', error);
     }
