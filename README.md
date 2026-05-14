@@ -4,6 +4,7 @@ Accessibility Tracker is a community-driven platform where disabled travelers fi
 
 ## Why I Built This
 I sustained a spinal cord injury just before starting college, and navigating the world with a new disability taught me quickly how unreliable existing accessibility information can be. That experience led me to UW's Restorative Technologies Lab, where I spent three years working directly with individuals with spinal cord injuries on assistive and rehabilitative technology. That work deepened my understanding of how much the built environment shapes what's possible for people with physical disabilities, and how little community-sourced information exists to help disabled travelers navigate it.
+
 Existing platforms, such as Google Maps, include some accessibility data, but it's sparse, unverified, and limited to basics like wheelchair entrances. This app was built to fill that gap by providing structured, multi-dimensional reviews from people with real lived experience, layered on top of Google's data to make it more honest and more useful.
 
 ## What It Does
