@@ -1,6 +1,6 @@
 # Business Accessibility Tracker
 
-Accessibility Tracker is a community-driven platform where disabled travelers find, rate, and share real accessibility experiences, as the people who know best are those who live it.
+Accessibility Tracker is a community-driven platform where disabled travelers find, rate, and share real accessibility experiences.
 
 ## Why I Built This
 I sustained a spinal cord injury just before starting college, and navigating the world with a new disability taught me quickly how unreliable existing accessibility information can be. That experience led me to UW's Restorative Technologies Lab, where I spent three years working directly with individuals with spinal cord injuries on assistive and rehabilitative technology. That work deepened my understanding of how much the built environment shapes what's possible for people with physical disabilities, and how little community-sourced information exists to help disabled travelers navigate it.
