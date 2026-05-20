@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { APIProvider, Map, AdvancedMarker, InfoWindow, Pin } from '@vis.gl/react-google-maps';
 import { useBusinesses, Business } from '../hooks/useBusinesses';
 import { ReviewForm } from './ReviewForm';
@@ -33,7 +33,7 @@ export function MapView({ onCitySearch }: MapViewProps) {
   const [searchInput, setSearchInput] = useState('');
   const [businessQuery, setBusinessQuery] = useState('');
   const [loading, setLoading] = useState(false);
-  const [saveMessage, setSaveMessage] = useState<string | null>(null);
+
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [showBusinessDetail, setShowBusinessDetail] = useState(false);
   const [filters, setFilters] = useState<FilterState>({ minScore: 0, category: 'all', businessType: 'all' });
@@ -42,6 +42,25 @@ export function MapView({ onCitySearch }: MapViewProps) {
   const [mapKey, setMapKey] = useState(0);
 
   /* Search for places using Google Places API */
+  // Center map on user's current location on load
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setMapCenter({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          });
+          setMapKey(prev => prev + 1);
+        },
+        () => {
+          // If user denies location, keep default Chicago center
+          console.log('Location access denied, using default center');
+        }
+      );
+    }
+  }, []);
+
   const searchPlaces = async () => {
     if (!searchInput) return;
     setLoading(true);
@@ -78,9 +97,7 @@ export function MapView({ onCitySearch }: MapViewProps) {
         })
       });
       const data = await response.json();
-      setSaveMessage(data.message);
       await refetch();
-      setTimeout(() => setSaveMessage(null), 3000);
       return data.business;
     } catch (error) {
       console.error('Save failed:', error);
@@ -111,6 +128,7 @@ export function MapView({ onCitySearch }: MapViewProps) {
           placeholder="Enter a city or neighborhood"
           value={searchInput}
           onChange={e => setSearchInput(e.target.value)}
+          onFocus={() => { setSelectedPlace(null); setSelectedBusiness(null); }}
           onKeyDown={e => e.key === 'Enter' && searchPlaces()}
           style={{
             padding: '10px',
@@ -126,6 +144,7 @@ export function MapView({ onCitySearch }: MapViewProps) {
           placeholder="Search for a specific business (optional)"
           value={businessQuery}
           onChange={e => setBusinessQuery(e.target.value)}
+          onFocus={() => { setSelectedPlace(null); setSelectedBusiness(null); }}
           onKeyDown={e => e.key === 'Enter' && searchPlaces()}
           style={{
             padding: '10px',
@@ -157,9 +176,7 @@ export function MapView({ onCitySearch }: MapViewProps) {
           {businesses.length} {businesses.length === 1 ? 'business' : 'businesses'} tracked
         </span>
       </div>
-      {saveMessage && (
-        <p style={{ color: 'green', marginBottom: '10px' }}>{saveMessage}</p>
-      )}
+
       <div style={{ marginBottom: '8px', fontSize: '13px', color: '#666' }}>
         Red — search results &nbsp;&nbsp;
         Green — highly accessible &nbsp;&nbsp;
@@ -182,7 +199,7 @@ export function MapView({ onCitySearch }: MapViewProps) {
               position={place.geometry.location}
               onClick={() => { setSelectedPlace(place); setSelectedBusiness(null); }}
             >
-              <Pin background="#B71C1C" borderColor="#7B0000" glyphColor="white" />
+              <Pin background="#00ACC1" borderColor="#006978" glyphColor="white" />
             </AdvancedMarker>
           ))}
 
@@ -214,20 +231,22 @@ export function MapView({ onCitySearch }: MapViewProps) {
                 <h3 style={{ margin: '0 0 4px' }}>{selectedPlace.name}</h3>
                 <p style={{ margin: '0 0 4px' }}>{selectedPlace.vicinity}</p>
                 {selectedPlace.rating && (
-                  <p style={{ margin: '0 0 8px' }}>⭐ {selectedPlace.rating}</p>
+                  <p style={{ margin: '0 0 8px' }}>{selectedPlace.rating} stars</p>
                 )}
-                <button
-                  onClick={() => saveBusiness(selectedPlace)}
-                  style={{ padding: '6px 12px', backgroundColor: '#00ACC1', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
-                >
-                  Save to Tracker
-                </button>
-                <button
-                  onClick={async () => { const saved = await saveBusiness(selectedPlace); if (saved) { setSelectedBusiness(saved); setShowReviewForm(true); } }}
-                  style={{ padding: '6px 12px', backgroundColor: '#2E7D32', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
-                >
-                  Save & Rate
-                </button>
+                <div style={{ display: 'flex', gap: '8px', marginTop: '8px' }}>
+                  <button
+                    onClick={async () => { const saved = await saveBusiness(selectedPlace); if (saved) { setSelectedBusiness(saved); setShowBusinessDetail(true); } }}
+                    style={{ padding: '6px 12px', backgroundColor: '#00ACC1', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+                  >
+                    View Details
+                  </button>
+                  <button
+                    onClick={async () => { const saved = await saveBusiness(selectedPlace); if (saved) { setSelectedBusiness(saved); setShowReviewForm(true); } }}
+                    style={{ padding: '6px 12px', backgroundColor: '#2E7D32', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+                  >
+                    Rate & Review
+                  </button>
+                </div>
               </div>
             </InfoWindow>
           )}
@@ -256,7 +275,7 @@ export function MapView({ onCitySearch }: MapViewProps) {
                     onClick={() => setShowReviewForm(true)}
                     style={{ padding: '6px 12px', backgroundColor: '#2E7D32', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
                   >
-                   Rate
+                    Rate & Review
                   </button>
                 </div>
               </div>
