@@ -9,6 +9,7 @@ export interface Business {
   longitude: number;
   business_type: string;
   overall_accessibility_score: number;
+  verified_features_count?: number;
 }
 
 export function useBusinesses(minScore = 0, businessType = 'all') {
