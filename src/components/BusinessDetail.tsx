@@ -11,6 +11,7 @@ interface Review {
   parking_score: number;
   overall_score: number;
   comment: string;
+  tags: string[];
   created_at: string;
 }
 
@@ -77,6 +78,11 @@ export function BusinessDetail({ business, onClose, onRateClick }: BusinessDetai
           <div>
             <h2 style={{ margin: '0 0 4px', color: '#00ACC1' }}>{business.name}</h2>
             <p style={{ margin: 0, color: '#666', fontSize: '14px' }}>{business.address}</p>
+            {business.verified_features_count && Number(business.verified_features_count) > 0 && (
+              <p style={{ margin: '4px 0 0', fontSize: '13px', color: '#00ACC1', fontWeight: 'bold' }}>
+                {business.verified_features_count} verified accessibility feature{Number(business.verified_features_count) > 1 ? 's' : ''} confirmed by the community
+              </p>
+            )}
           </div>
           <button onClick={onClose} style={{ background: 'none', border: 'none', fontSize: '20px', cursor: 'pointer', color: '#666' }}>x</button>
         </div>
@@ -153,6 +159,15 @@ export function BusinessDetail({ business, onClose, onRateClick }: BusinessDetai
               <span style={{ fontSize: '12px', backgroundColor: '#f0f0f0', padding: '2px 8px', borderRadius: '12px' }}>Parking & Transportation: {review.restroom_score}/5</span>
               <span style={{ fontSize: '12px', backgroundColor: '#f0f0f0', padding: '2px 8px', borderRadius: '12px' }}>Accessible Restrooms: {review.parking_score}/5</span>
             </div>
+            {review.tags && review.tags.length > 0 && (
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '6px' }}>
+                {review.tags.map((tag: string, i: number) => (
+                  <span key={i} style={{ backgroundColor: '#E0F7FA', color: '#006978', padding: '2px 10px', borderRadius: '12px', fontSize: '12px' }}>
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
             {review.comment && (
               <p style={{ margin: 0, fontSize: '14px', color: '#444' }}>{review.comment}</p>
             )}

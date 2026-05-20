@@ -22,6 +22,26 @@ const scoreFields: ScoreField[] = [
   { key: 'parking_score', label: 'Accessible Restrooms', emoji: '' },
 ];
 
+const SUGGESTION_TAGS = [
+  'ADA accessible main entrance',
+  'ADA accessible entrance, but not the main entrance',
+  'Bar/high top seating only',
+  'Quiet or sensory room onsite',
+  'Accessible/free parking provided',
+  'Ramped main entrance',
+  'Elevator',
+  'Accessible restroom',
+  'Restroom located on main floor',
+  'ADA Vertical Platform lift (staff assistance required)',
+  'Accessible reception area',
+  'Staff available',
+  'Maps provided (no tactile/braille)',
+  'Tactile/braille maps/signage',
+  'Interpretation boards provided',
+  'Mostly mixed surfaces (carpet/gravel)',
+  'Accessible play area',
+];
+
 export function ReviewForm({ businessId, businessName, onClose, onSubmitted }: ReviewFormProps) {
   const [scores, setScores] = useState<Record<string, number>>({
     mobility_score: 3,
@@ -31,8 +51,17 @@ export function ReviewForm({ businessId, businessName, onClose, onSubmitted }: R
     parking_score: 3,
   });
   const [comment, setComment] = useState('');
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const toggleTag = (tag: string) => {
+    setSelectedTags(prev =>
+      prev.includes(tag)
+        ? prev.filter(t => t !== tag)
+        : [...prev, tag]
+    );
+  };
 
   const handleSubmit = async () => {
     setSubmitting(true);
@@ -52,7 +81,8 @@ export function ReviewForm({ businessId, businessName, onClose, onSubmitted }: R
           business_id: businessId,
           firebase_uid: user.uid,
           ...scores,
-          comment
+          comment,
+          tags: selectedTags
         })
       });
 
@@ -78,12 +108,12 @@ export function ReviewForm({ businessId, businessName, onClose, onSubmitted }: R
     }}>
       <div style={{
         backgroundColor: 'white', borderRadius: '8px',
-        padding: '24px', width: '480px', maxWidth: '90vw',
+        padding: '24px', width: '520px', maxWidth: '90vw',
         maxHeight: '90vh', overflowY: 'auto'
       }}>
-        <h2 style={{ margin: '0 0 4px', color: '#F06292' }}>Share Your Experience</h2>
+        <h2 style={{ margin: '0 0 4px', color: '#00ACC1' }}>Share Your Experience</h2>
         <p style={{ margin: '0 0 4px', color: '#666' }}>{businessName}</p>
-          <p style={{ margin: '0 0 20px', color: '#999', fontSize: '13px' }}>Your review helps others in the community find accessible places.</p>
+        <p style={{ margin: '0 0 20px', color: '#999', fontSize: '13px' }}>Your review helps others in the community find accessible places.</p>
 
         {scoreFields.map(field => (
           <div key={field.key} style={{ marginBottom: '16px' }}>
@@ -118,8 +148,41 @@ export function ReviewForm({ businessId, businessName, onClose, onSubmitted }: R
         ))}
 
         <div style={{ marginBottom: '20px' }}>
+          <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>
+            Accessibility Features (select all that apply)
+          </label>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+            {SUGGESTION_TAGS.map(tag => (
+              <button
+                key={tag}
+                onClick={() => toggleTag(tag)}
+                style={{
+                  padding: '6px 12px',
+                  borderRadius: '20px',
+                  border: '1px solid',
+                  borderColor: selectedTags.includes(tag) ? '#00ACC1' : '#ddd',
+                  backgroundColor: selectedTags.includes(tag) ? '#E0F7FA' : 'white',
+                  color: selectedTags.includes(tag) ? '#006978' : '#555',
+                  cursor: 'pointer',
+                  fontSize: '13px',
+                  fontWeight: selectedTags.includes(tag) ? 'bold' : 'normal',
+                  transition: 'all 0.15s ease'
+                }}
+              >
+                {selectedTags.includes(tag) ? '+ ' : ''}{tag}
+              </button>
+            ))}
+          </div>
+          {selectedTags.length > 0 && (
+            <p style={{ margin: '8px 0 0', fontSize: '12px', color: '#00ACC1' }}>
+              {selectedTags.length} feature{selectedTags.length > 1 ? 's' : ''} selected
+            </p>
+          )}
+        </div>
+
+        <div style={{ marginBottom: '20px' }}>
           <label style={{ display: 'block', marginBottom: '6px', fontWeight: 'bold' }}>
-            Additional Comments (optional)
+            Additional Comments (optional, but recommended)
           </label>
           <textarea
             value={comment}

@@ -17,6 +17,7 @@ interface CityStats {
     avg_overall_score: string;
     total_reviews: string;
   }[];
+  topTags: { tag: string; count: string }[];
   topBusinesses: {
     id: number;
     name: string;
@@ -150,6 +151,25 @@ export function CityDashboard({ onClose, city }: CityDashboardProps) {
             )}
 
             {/* By Business Type */}
+            {stats.topTags && stats.topTags.length > 0 && (
+              <div style={{ marginBottom: '20px' }}>
+                <h3 style={{ margin: '0 0 12px', fontSize: '16px', color: '#F06292' }}>
+                  Most Verified Accessibility Features
+                </h3>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                  {stats.topTags.map((item, i) => (
+                    <div key={i} style={{
+                      backgroundColor: '#E0F7FA', borderRadius: '20px',
+                      padding: '6px 14px', display: 'flex', alignItems: 'center', gap: '6px'
+                    }}>
+                      <span style={{ fontSize: '13px', color: '#006978', fontWeight: 'bold' }}>{item.tag}</span>
+                      <span style={{ fontSize: '12px', backgroundColor: '#00ACC1', color: 'white', borderRadius: '10px', padding: '1px 7px' }}>{item.count}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {stats.byType.length > 0 && (
               <div>
                 <h3 style={{ margin: '0 0 12px', fontSize: '16px', color: '#F06292' }}>
