@@ -7,6 +7,7 @@ import { MapView } from './components/MapView';
 import { CityDashboard } from './components/CityDashboard';
 import { TripPlanner } from './components/TripPlanner';
 import { About } from './components/About';
+import { ElevatorInfo } from './components/ElevatorInfo';
 import { Footer } from './components/Footer';
 
 function App() {
@@ -89,6 +90,19 @@ function App() {
             Dashboard
           </button>
           <button
+            onClick={() => navigate('/elevators')}
+            style={{
+              padding: '6px 12px',
+              backgroundColor: location.pathname === '/elevators' ? 'white' : 'transparent',
+              color: location.pathname === '/elevators' ? '#F06292' : 'white',
+              border: '1px solid rgba(255,255,255,0.5)',
+              borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold',
+              fontSize: 'clamp(11px, 2.5vw, 14px)'
+            }}
+          >
+            Elevators
+          </button>
+          <button
             onClick={() => navigate('/about')}
             style={{
               padding: '6px 12px',
@@ -122,6 +136,7 @@ function App() {
           <Route path="/trip-planner" element={<TripPlanner user={user} />} />
           <Route path="/trip-planner/share/:shareId" element={<TripPlanner user={user} />} />
           <Route path="/about" element={<About />} />
+          <Route path="/elevators" element={<ElevatorInfo />} />
         </Routes>
       </div>
 
