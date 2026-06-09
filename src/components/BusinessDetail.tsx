@@ -5,6 +5,8 @@ interface Review {
   id: number;
   firebase_uid: string;
   mobility_score: number;
+  vision_score: number;
+  hearing_score: number;
   sensory_score: number;
   service_score: number;
   restroom_score: number;
