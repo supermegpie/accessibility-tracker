@@ -9,10 +9,14 @@ export interface Business {
   longitude: number;
   business_type: string;
   overall_accessibility_score: number;
+  mobility_accessibility_score?: number;
+  vision_accessibility_score?: number;
+  hearing_accessibility_score?: number;
+  sensory_accessibility_score?: number;
   verified_features_count?: number;
 }
 
-export function useBusinesses(minScore = 0, businessType = 'all') {
+export function useBusinesses(minScore = 0, businessType = 'all', category = 'all') {
   const [businesses, setBusinesses] = useState<Business[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -22,9 +26,11 @@ export function useBusinesses(minScore = 0, businessType = 'all') {
       const params = new URLSearchParams();
       if (minScore > 0) params.append('minScore', String(minScore));
       if (businessType !== 'all') params.append('businessType', businessType);
+      if (category !== 'all') params.append('category', category);
 
       const baseUrl = import.meta.env.VITE_API_URL || '';
-      const url = minScore > 0 || businessType !== 'all'
+      const hasFilters = minScore > 0 || businessType !== 'all' || category !== 'all';
+      const url = hasFilters
         ? `${baseUrl}/api/businesses/filter?${params.toString()}`
         : `${baseUrl}/api/businesses`;
 
@@ -42,7 +48,7 @@ export function useBusinesses(minScore = 0, businessType = 'all') {
 
   useEffect(() => {
     fetchBusinesses();
-  }, [minScore, businessType]);
+  }, [minScore, businessType, category]);
 
   return { businesses, loading, error, refetch: fetchBusinesses };
 }

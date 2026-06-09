@@ -39,7 +39,7 @@ export function AccessibilityFilter({ filters, onChange }: AccessibilityFilterPr
 
       {/* Category Filter */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-        <label style={{ fontSize: '14px', color: '#444' }}>Category:</label>
+        <label style={{ fontSize: '14px', color: '#444' }}>Sort by disability:</label>
         <select
           value={filters.category}
           onChange={e => onChange({ ...filters, category: e.target.value })}
@@ -47,10 +47,9 @@ export function AccessibilityFilter({ filters, onChange }: AccessibilityFilterPr
         >
           <option value="all">All</option>
           <option value="mobility">Mobility & Physical Access</option>
-          <option value="sensory">Sensory</option>
-          <option value="service">Service Quality</option>
-          <option value="restroom">Restrooms</option>
-          <option value="parking">Parking</option>
+          <option value="vision">Vision</option>
+          <option value="hearing">Hearing</option>
+          <option value="sensory">Cognitive & Sensory</option>
         </select>
       </div>
 

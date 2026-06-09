@@ -16,10 +16,10 @@ interface ScoreField {
 
 const scoreFields: ScoreField[] = [
   { key: 'mobility_score', label: 'Mobility & Physical Access', emoji: '' },
-  { key: 'sensory_score', label: 'Sensory Accessibility', emoji: '' },
+  { key: 'vision_score', label: 'Vision Accessibility', emoji: '' },
+  { key: 'hearing_score', label: 'Hearing Accessibility', emoji: '' },
+  { key: 'sensory_score', label: 'Cognitive & Sensory', emoji: '' },
   { key: 'service_score', label: 'Staff & Service Quality', emoji: '' },
-  { key: 'restroom_score', label: 'Parking & Transportation', emoji: '' },
-  { key: 'parking_score', label: 'Accessible Restrooms', emoji: '' },
 ];
 
 const SUGGESTION_TAGS = [
@@ -45,10 +45,10 @@ const SUGGESTION_TAGS = [
 export function ReviewForm({ businessId, businessName, onClose, onSubmitted }: ReviewFormProps) {
   const [scores, setScores] = useState<Record<string, number>>({
     mobility_score: 3,
+    vision_score: 3,
+    hearing_score: 3,
     sensory_score: 3,
     service_score: 3,
-    restroom_score: 3,
-    parking_score: 3,
   });
   const [comment, setComment] = useState('');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);

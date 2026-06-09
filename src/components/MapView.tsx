@@ -37,7 +37,7 @@ export function MapView({ onCitySearch }: MapViewProps) {
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [showBusinessDetail, setShowBusinessDetail] = useState(false);
   const [filters, setFilters] = useState<FilterState>({ minScore: 0, category: 'all', businessType: 'all' });
-  const { businesses, refetch } = useBusinesses(filters.minScore, filters.businessType);
+  const { businesses, refetch } = useBusinesses(filters.minScore, filters.businessType, filters.category);
   const [mapZoom, setMapZoom] = useState(13);
   const [mapKey, setMapKey] = useState(0);
 
@@ -106,11 +106,16 @@ export function MapView({ onCitySearch }: MapViewProps) {
   };
 
   /* Determine marker color based on accessibility score */
-  const getMarkerColor = (score: number | null) => {
-    if (!score) return { background: '#00ACC1', border: '#006978' }; // Blue = not rated
-    if (score >= 4) return { background: '#2E7D32', border: '#1A7A40' }; // Green = highly accessible
-    if (score >= 3) return { background: '#E65100', border: '#B7770D' }; // Yellow = fair
-    return { background: '#B71C1C', border: '#A93226' }; // Red = not accessible
+  const getMarkerColor = (business: Business) => {
+    const score = filters.category === 'mobility' ? business.mobility_accessibility_score :
+      filters.category === 'vision' ? business.vision_accessibility_score :
+      filters.category === 'hearing' ? business.hearing_accessibility_score :
+      filters.category === 'sensory' ? business.sensory_accessibility_score :
+      business.overall_accessibility_score;
+    if (!score) return { background: '#00ACC1', border: '#006978' };
+    if (score >= 4) return { background: '#2E7D32', border: '#1A7A40' };
+    if (score >= 3) return { background: '#E65100', border: '#B7770D' };
+    return { background: '#B71C1C', border: '#A93226' };
   };
 
   return (
@@ -205,7 +210,7 @@ export function MapView({ onCitySearch }: MapViewProps) {
 
           {/* Saved business markers. Color coded by score */}
           {!businessQuery && businesses.map(business => {
-            const colors = getMarkerColor(business.overall_accessibility_score);
+            const colors = getMarkerColor(business);
             return (
               <AdvancedMarker
                 key={business.google_place_id}

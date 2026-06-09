@@ -112,10 +112,15 @@ export function BusinessDetail({ business, onClose, onRateClick }: BusinessDetai
           <div style={{ marginBottom: '20px' }}>
             <h3 style={{ margin: '0 0 12px', fontSize: '16px' }}>Score Breakdown</h3>
             <ScoreBar label="Mobility & Physical Access" score={avgScore('mobility_score')} />
-            <ScoreBar label="Sensory Accessibility" score={avgScore('sensory_score')} />
+            <ScoreBar label="Vision Accessibility" score={avgScore('vision_score')} />
+            <ScoreBar label="Hearing Accessibility" score={avgScore('hearing_score')} />
+            <ScoreBar label="Cognitive & Sensory" score={avgScore('sensory_score')} />
             <ScoreBar label="Staff & Service Quality" score={avgScore('service_score')} />
-            <ScoreBar label="Parking & Transportation" score={avgScore('restroom_score')} />
-            <ScoreBar label="Accessible Restrooms" score={avgScore('parking_score')} />
+            <div style={{ borderTop: '1px solid #eee', paddingTop: '8px', marginTop: '4px' }}>
+              <p style={{ margin: '0 0 6px', fontSize: '12px', color: '#999' }}>Sub-scores</p>
+              <ScoreBar label="Accessible Restrooms" score={avgScore('parking_score')} />
+              <ScoreBar label="Parking & Transportation" score={avgScore('restroom_score')} />
+            </div>
           </div>
         )}
 

@@ -5,10 +5,10 @@ interface CityStats {
     total_businesses: string;
     avg_overall_score: string;
     avg_mobility: string;
+    avg_vision: string;
+    avg_hearing: string;
     avg_sensory: string;
     avg_service: string;
-    avg_restroom: string;
-    avg_parking: string;
     total_reviews: string;
   };
   byType: {
@@ -115,10 +115,11 @@ export function CityDashboard({ onClose, city }: CityDashboardProps) {
 
               {/* Score Breakdown */}
               <div style={{ display: 'flex', justifyContent: 'space-around', flexWrap: 'wrap' }}>
-                <ScoreCircle score={stats.overall.avg_mobility} label="Mobility & Physical" />
-                <ScoreCircle score={stats.overall.avg_sensory} label="Sensory" />
+                <ScoreCircle score={stats.overall.avg_mobility} label="Mobility" />
+                <ScoreCircle score={stats.overall.avg_vision} label="Vision" />
+                <ScoreCircle score={stats.overall.avg_hearing} label="Hearing" />
+                <ScoreCircle score={stats.overall.avg_sensory} label="Cognitive & Sensory" />
                 <ScoreCircle score={stats.overall.avg_service} label="Service" />
-                <ScoreCircle score={stats.overall.avg_restroom} label="Parking & Transit" />
               </div>
             </div>
 
