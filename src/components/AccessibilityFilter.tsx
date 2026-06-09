@@ -9,6 +9,7 @@ interface AccessibilityFilterProps {
   onChange: (filters: FilterState) => void;
 }
 
+// v2: disability-specific filtering
 export type { FilterState };
 
 export function AccessibilityFilter({ filters, onChange }: AccessibilityFilterProps) {
