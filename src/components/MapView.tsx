@@ -160,6 +160,11 @@ export function MapView({ onCitySearch }: MapViewProps) {
             fontSize: '16px'
           }}
         />
+        {businessQuery && !searchInput && (
+          <span style={{ fontSize: '12px', color: '#E65100', whiteSpace: 'nowrap' }}>
+            {userLocation ? 'Searching near your location' : 'Enter a city too for best results'}
+          </span>
+        )}
         <button
           onClick={searchPlaces}
           style={{
