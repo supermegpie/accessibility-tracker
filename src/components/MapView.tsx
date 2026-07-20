@@ -39,6 +39,7 @@ export function MapView({ onCitySearch }: MapViewProps) {
   const [filters, setFilters] = useState<FilterState>({ minScore: 0, category: 'all', businessType: 'all' });
   const { businesses, refetch } = useBusinesses(filters.minScore, filters.businessType, filters.category);
   const [mapZoom, setMapZoom] = useState(13);
+  const [userLocation, setUserLocation] = useState<{lat: number, lng: number} | null>(null);
   const [mapKey, setMapKey] = useState(0);
 
   /* Search for places using Google Places API */
@@ -47,10 +48,9 @@ export function MapView({ onCitySearch }: MapViewProps) {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          setMapCenter({
-            lat: position.coords.latitude,
-            lng: position.coords.longitude
-          });
+          const loc = { lat: position.coords.latitude, lng: position.coords.longitude };
+          setMapCenter(loc);
+          setUserLocation(loc);
           setMapKey(prev => prev + 1);
         },
         () => {
@@ -62,18 +62,26 @@ export function MapView({ onCitySearch }: MapViewProps) {
   }, []);
 
   const searchPlaces = async () => {
-    if (!searchInput) return;
+    if (!searchInput && !businessQuery) return;
+    if (!searchInput && businessQuery && !userLocation) {
+      alert('Please enter a city or neighborhood, or allow location access so we can search near you.');
+      return;
+    }
     setLoading(true);
     try {
+      const locationParam = searchInput
+        ? encodeURIComponent(searchInput)
+        : userLocation
+        ? `${userLocation.lat},${userLocation.lng}`
+        : 'Chicago,IL';
+
       const response = await fetch(
-        (import.meta.env.VITE_API_URL || '') + `/api/places/search?location=${encodeURIComponent(searchInput)}&type=restaurant${businessQuery ? '&query=' + encodeURIComponent(businessQuery) : ''}`
+        (import.meta.env.VITE_API_URL || '') + `/api/places/search?location=${locationParam}&type=restaurant${businessQuery ? '&query=' + encodeURIComponent(businessQuery) : ''}`
       );
       const data = await response.json();
       setPlaces(data.places);
       setMapCenter(data.center);
-
       if (onCitySearch) onCitySearch(searchInput);
-      // Zoom in more for specific business searches, less for city searches
       setMapZoom(businessQuery ? 15 : 13);
       setMapKey(prev => prev + 1);
     } catch (error) {
