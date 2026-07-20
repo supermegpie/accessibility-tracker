@@ -43,6 +43,13 @@ export function About() {
               <p style={{ margin: 0, color: '#666', fontSize: '14px', lineHeight: '1.6' }}>Use the Trip Planner to find the top 5 most accessible destinations for any search, combining Google data, community scores, and real-time transit status for Chicago, NYC, and Seattle (more cities will be added pending available transit data). </p>
             </div>
           </div>
+          <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
+            <div style={{ width: '32px', height: '32px', borderRadius: '10%', backgroundColor: '#F06292', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '600', flexShrink: 0 }}>4</div>
+            <div>
+              <p style={{ margin: '0 0 4px', fontWeight: '600', color: '#222', fontSize: '15px' }}>Plan accessible day</p>
+              <p style={{ margin: 0, color: '#666', fontSize: '14px', lineHeight: '1.6' }}>Use the Plan a Day tool to plan an full accessible day out. Choose what kind of day (e.g., date night, family-friendly, adventure), how many stops (e.g., 3-5), and we'll suggest accessible options. </p>
+            </div>
+          </div>
         </div>
       </div>
 

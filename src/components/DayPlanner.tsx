@@ -139,7 +139,7 @@ export function DayPlanner() {
       <h2 style={{ color: '#00ACC1', fontSize: '26px', marginBottom: '8px' }}>Plan an Accessible Day</h2>
       <div style={{ width: '48px', height: '4px', backgroundColor: '#F06292', borderRadius: '2px', marginBottom: '16px' }} />
       <p style={{ color: '#666', fontSize: '14px', marginBottom: '24px', lineHeight: '1.6' }}>
-        We will build you an accessible day out — finding the most wheelchair friendly, sensory accessible stops near each other to minimize travel stress. Transit elevator info is included for each stop.
+        Use this tool to build an accessible day out. We will help you find the most wheelchair friendly, sensory accessible stops near each other to minimize travel stress. Transit elevator info is included for each stop.
       </p>
 
       {/* Search form */}
