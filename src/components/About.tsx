@@ -51,7 +51,7 @@ export function About() {
             </div>
           </div>
           <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
-            <div style={{ width: '32px', height: '32px', borderRadius: '10%', backgroundColor: '#F06292', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '600', flexShrink: 0 }}>4</div>
+            <div style={{ width: '32px', height: '32px', borderRadius: '10%', backgroundColor: '#F06292', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '600', flexShrink: 0 }}>5</div>
             <div>
               <p style={{ margin: '0 0 4px', fontWeight: '600', color: '#222', fontSize: '15px' }}>View community elevator guide</p>
               <p style={{ margin: 0, color: '#666', fontSize: '14px', lineHeight: '1.6' }}>Use the Community Elevator Guide to help others by sharing where elevators are located and whether they were working on your visit. </p>
