@@ -79,6 +79,11 @@ export function MapView({ onCitySearch }: MapViewProps) {
         (import.meta.env.VITE_API_URL || '') + `/api/places/search?location=${locationParam}&type=restaurant${businessQuery ? '&query=' + encodeURIComponent(businessQuery) : ''}`
       );
       const data = await response.json();
+      if (!data.places || !data.center) {
+        console.error('Invalid response from places API:', data);
+        setLoading(false);
+        return;
+      }
       setPlaces(data.places);
       setMapCenter(data.center);
       if (onCitySearch) onCitySearch(searchInput);
