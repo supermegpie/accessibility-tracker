@@ -67,6 +67,7 @@ export function LoginPage() {
 
         if (!userRes.ok) {
           const userErr = await userRes.json();
+          console.log('User save failed:', userErr); //log for debugging
           const errMsg = userErr.error || 'Failed to create account. Please try again.';
           //Delete the Firebase account if our DB save failed
           await userCredential.user.delete();
