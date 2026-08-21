@@ -44,7 +44,7 @@ export function LoginPage() {
 
         // Check if username is availabile before creating Firebase account
         const usernameCheck = await fetch(
-          (import.meta.env.VITE_API_URL || '') + '/api/users/check-username/' + encodeURIComponent(username)
+          (import.meta.env.VITE_API_URL || '') + '/api/users/username-check/' + encodeURIComponent(username)
         );
         const usernameData = await usernameCheck.json();
         if (!usernameData.available) {
