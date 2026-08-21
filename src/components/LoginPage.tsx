@@ -11,11 +11,7 @@ export function LoginPage() {
   const [username, setUsername] = useState('');
   const [identifiesAsDisabled, setIdentifiesAsDisabled] = useState<boolean | null>(null);
   const [isSignUp, setIsSignUp] = useState(false);
-  const [error, setError] = useState<string | null>(() => {
-    const stored = sessionStorage.getItem('signup_error');
-    if (stored) { sessionStorage.removeItem('signup_error'); return stored; }
-    return null;
-  });
+  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   const inputStyle = {
@@ -46,15 +42,15 @@ export function LoginPage() {
           return;
         }
 
-        // Create Firebase account
+        //Create Firebase account
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
 
-        // Set display name in Firebase
+        //Set display name in Firebase
         await updateProfile(userCredential.user, {
           displayName: username
         });
 
-        // Save full profile to our database
+        //Save full profile to our database
         const userRes = await fetch((import.meta.env.VITE_API_URL || '') + '/api/users', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -71,10 +67,9 @@ export function LoginPage() {
 
         if (!userRes.ok) {
           const userErr = await userRes.json();
-          console.log('User save failed:', userErr); //log for debugging
           const errMsg = userErr.error || 'Failed to create account. Please try again.';
-          await userCredential.user.delete();
-          await auth.signOut();
+          try { await userCredential.user.delete(); } catch (_e) {}
+          setIsSignUp(true);
           setError(errMsg);
           setLoading(false);
           return;
