@@ -6,7 +6,7 @@ export function Footer() {
     const url = 'https://accessibility-tracker-sooty.vercel.app';
     const shareData = {
       title: 'Accessibility Tracker',
-      text: 'Rate, review, and discover accessible businesses near you — built by and for people with disabilities.',
+      text: 'Rate, review, and discover accessible businesses near you with Accessibility Tracker. Built by and for people with disabilities.',
       url,
     };
 
