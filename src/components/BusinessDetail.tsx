@@ -13,6 +13,8 @@ interface Review {
   parking_score: number;
   overall_score: number;
   comment: string;
+  display_name?: string;
+  email?: string;
   tags: string[];
   created_at: string;
 }
@@ -151,7 +153,12 @@ export function BusinessDetail({ business, onClose, onRateClick }: BusinessDetai
           <div key={review.id} style={{
             borderTop: '1px solid #eee', paddingTop: '12px', marginBottom: '12px'
           }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2px' }}>
+                <span style={{ fontSize: '13px', color: '#00ACC1', fontWeight: 'bold' }}>
+                  {review.display_name || 'Community Member'}
+                </span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
               <span style={{ fontWeight: 'bold', color: scoreColor }}>
                 Overall: {Number(review.overall_score).toFixed(1)}/5
               </span>
