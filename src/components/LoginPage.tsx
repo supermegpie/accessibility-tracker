@@ -51,7 +51,7 @@ export function LoginPage() {
         });
 
         // Save full profile to our database
-        await fetch((import.meta.env.VITE_API_URL || '') + '/api/users', {
+        const userRes = await fetch((import.meta.env.VITE_API_URL || '') + '/api/users', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -64,6 +64,15 @@ export function LoginPage() {
             identifies_as_disabled: identifiesAsDisabled
           })
         });
+
+        if (!userRes.ok) {
+          const userErr = await userRes.json();
+          // Delete the Firebase account if our DB save failed
+          await userCredential.user.delete();
+          setError(userErr.error || 'Failed to create account. Please try again.');
+          setLoading(false);
+          return;
+        }
 
       } else {
         await signInWithEmailAndPassword(auth, email, password);
