@@ -11,7 +11,11 @@ export function LoginPage() {
   const [username, setUsername] = useState('');
   const [identifiesAsDisabled, setIdentifiesAsDisabled] = useState<boolean | null>(null);
   const [isSignUp, setIsSignUp] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(() => {
+    const stored = sessionStorage.getItem('signup_error');
+    if (stored) { sessionStorage.removeItem('signup_error'); return stored; }
+    return null;
+  });
   const [loading, setLoading] = useState(false);
 
   const inputStyle = {
