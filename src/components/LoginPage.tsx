@@ -42,7 +42,18 @@ export function LoginPage() {
           return;
         }
 
-        //Create Firebase account
+        // Check if username is availabile before creating Firebase account
+        const usernameCheck = await fetch(
+          (import.meta.env.VITE_API_URL || '') + '/api/users/check-username/' + encodeURIComponent(username)
+        );
+        const usernameData = await usernameCheck.json();
+        if (!usernameData.available) {
+          setError('That username is already taken. Please choose a different one.');
+          setLoading(false);
+          return;
+        }
+
+        // Create Firebase account
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
 
         //Set display name in Firebase
@@ -80,7 +91,6 @@ export function LoginPage() {
       }
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'An error occurred';
-      // Make Firebase error messages friendlier
       if (msg.includes('email-already-in-use')) setError('An account with that email already exists.');
       else if (msg.includes('weak-password')) setError('Password must be at least 6 characters.');
       else if (msg.includes('invalid-credential')) setError('Incorrect email or password.');
