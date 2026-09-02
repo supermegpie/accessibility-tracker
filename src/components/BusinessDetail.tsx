@@ -170,8 +170,8 @@ export function BusinessDetail({ business, onClose, onRateClick }: BusinessDetai
               <span style={{ fontSize: '12px', backgroundColor: '#f0f0f0', padding: '2px 8px', borderRadius: '12px' }}>Mobility & Physical Access: {review.mobility_score}/5</span>
               <span style={{ fontSize: '12px', backgroundColor: '#f0f0f0', padding: '2px 8px', borderRadius: '12px' }}>Sensory: {review.sensory_score}/5</span>
               <span style={{ fontSize: '12px', backgroundColor: '#f0f0f0', padding: '2px 8px', borderRadius: '12px' }}>Service: {review.service_score}/5</span>
-              <span style={{ fontSize: '12px', backgroundColor: '#f0f0f0', padding: '2px 8px', borderRadius: '12px' }}>Parking & Transportation: {review.restroom_score}/5</span>
-              <span style={{ fontSize: '12px', backgroundColor: '#f0f0f0', padding: '2px 8px', borderRadius: '12px' }}>Accessible Restrooms: {review.parking_score}/5</span>
+              {/*<span style={{ fontSize: '12px', backgroundColor: '#f0f0f0', padding: '2px 8px', borderRadius: '12px' }}>Parking & Transportation: {review.restroom_score}/5</span>
+              <span style={{ fontSize: '12px', backgroundColor: '#f0f0f0', padding: '2px 8px', borderRadius: '12px' }}>Accessible Restrooms: {review.parking_score}/5</span>*/}
             </div>
             {review.tags && review.tags.length > 0 && (
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '6px' }}>
