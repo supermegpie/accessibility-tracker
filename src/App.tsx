@@ -76,58 +76,8 @@ function App() {
           >
             Map
           </button>
-          <button
-            onClick={() => navigate('/trip-planner')}
-            style={{
-              padding: '6px 12px',
-              backgroundColor: location.pathname === '/trip-planner' ? 'white' : 'transparent',
-              color: location.pathname === '/trip-planner' ? '#F06292' : 'white',
-              border: '1px solid rgba(255,255,255,0.5)',
-              borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold',
-              fontSize: 'clamp(11px, 2.5vw, 14px)'
-            }}
-          >
-            Trip Planner
-          </button>
-          <button
-            onClick={() => setShowDashboard(true)}
-            style={{
-              padding: '6px 12px', 
-              backgroundColor: showDashboard ? 'white' : 'transparent',
-              color: showDashboard ? '#F06292' : 'white', 
-              border: '1px solid rgba(255,255,255,0.5)',
-              borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold',
-              fontSize: 'clamp(11px, 2.5vw, 14px)'
-            }}
-          >
-            Dashboard
-          </button>
-          <button
-            onClick={() => navigate('/day-planner')}
-            style={{
-              padding: '6px 12px',
-              backgroundColor: location.pathname === '/day-planner' ? 'white' : 'transparent',
-              color: location.pathname === '/day-planner' ? '#F06292' : 'white',
-              border: '1px solid rgba(255,255,255,0.5)',
-              borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold',
-              fontSize: 'clamp(11px, 2.5vw, 14px)'
-            }}
-          >
-            Plan a Day
-          </button>
-          <button
-            onClick={() => navigate('/elevators')}
-            style={{
-              padding: '6px 12px',
-              backgroundColor: location.pathname === '/elevators' ? 'white' : 'transparent',
-              color: location.pathname === '/elevators' ? '#F06292' : 'white',
-              border: '1px solid rgba(255,255,255,0.5)',
-              borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold',
-              fontSize: 'clamp(11px, 2.5vw, 14px)'
-            }}
-          >
-            Elevators
-          </button>
+
+
           <button
             onClick={() => navigate('/about')}
             style={{
