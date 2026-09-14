@@ -88,7 +88,7 @@ export function About() {
       <div style={{ backgroundColor: '#00ACC1', borderRadius: '8px', padding: '28px', textAlign: 'center' }}>
         <h3 style={{ color: 'white', fontSize: '18px', marginBottom: '8px' }}>Start contributing today</h3>
         <p style={{ color: 'rgba(255,255,255,0.9)', fontSize: '14px', margin: '0 0 16px', lineHeight: '1.6' }}>
-          The app is only as useful as the community behind it. If you have visited a business recently, your review takes less than two minutes and makes a real difference for the next disabled traveler searching for that place.
+          The more reviews we have, the more useful this website becomes for EVERYONE If you have visited a business recently, your review takes less than two minutes and makes a real difference for the next disabled traveler searching for that place.
         </p>
         <a href="/" style={{ display: 'inline-block', backgroundColor: 'white', color: '#00ACC1', padding: '10px 24px', borderRadius: '4px', fontWeight: '600', textDecoration: 'none', fontSize: '14px' }}>
           Open the Map
