@@ -9,7 +9,7 @@ interface AccessibilityFilterProps {
   onChange: (filters: FilterState) => void;
 }
 
-// v2: disability-specific filtering
+// v2: disability specific filtering
 export type { FilterState };
 
 export function AccessibilityFilter({ filters, onChange }: AccessibilityFilterProps) {
@@ -22,21 +22,6 @@ export function AccessibilityFilter({ filters, onChange }: AccessibilityFilterPr
       <span style={{ fontWeight: 'bold', fontSize: '14px', color: '#00ACC1' }}>
         Filter:
       </span>
-
-      {/* Minimum Score Filter */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-        <label style={{ fontSize: '14px', color: '#444' }}>Min Score:</label>
-        <select
-          value={filters.minScore}
-          onChange={e => onChange({ ...filters, minScore: Number(e.target.value) })}
-          style={{ padding: '4px 8px', borderRadius: '4px', border: '1px solid #ddd', fontSize: '14px' }}
-        >
-          <option value={0}>Any</option>
-          <option value={3}>3+ (Fair)</option>
-          <option value={4}>4+ (Good)</option>
-          <option value={4.5}>4.5+ (Excellent)</option>
-        </select>
-      </div>
 
       {/* Category Filter */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -54,7 +39,22 @@ export function AccessibilityFilter({ filters, onChange }: AccessibilityFilterPr
         </select>
       </div>
 
-      {/* Business Type Filter */}
+      {/* Minimum Score Filter */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <label style={{ fontSize: '14px', color: '#444' }}>Min Score:</label>
+        <select
+          value={filters.minScore}
+          onChange={e => onChange({ ...filters, minScore: Number(e.target.value) })}
+          style={{ padding: '4px 8px', borderRadius: '4px', border: '1px solid #ddd', fontSize: '14px' }}
+        >
+          <option value={0}>Any</option>
+          <option value={3}>3+ (Fair)</option>
+          <option value={4}>4+ (Good)</option>
+          <option value={4.5}>4.5+ (Excellent)</option>
+        </select>
+      </div>
+
+      {/* Business Type Filter
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
         <label style={{ fontSize: '14px', color: '#444' }}>Type:</label>
         <select
@@ -68,7 +68,7 @@ export function AccessibilityFilter({ filters, onChange }: AccessibilityFilterPr
           <option value="lodging">Hotels</option>
           <option value="store">Shops</option>
         </select>
-      </div>
+      </div>*/}
 
       {/* Reset */}
       <button

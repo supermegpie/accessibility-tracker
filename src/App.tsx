@@ -15,14 +15,26 @@ function App() {
   const [user, setUser] = useState<User | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
   const [showDashboard, setShowDashboard] = useState(false);
+  const [userProfile, setUserProfile] = useState<any>(null);
   const [currentCity, setCurrentCity] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
       setAuthLoading(false);
+      if (currentUser) {
+        try {
+          const profileRes = await fetch((import.meta.env.VITE_API_URL || '') + '/api/users/' + currentUser.uid);
+          if (profileRes.ok) {
+            const profile = await profileRes.json();
+            setUserProfile(profile);
+          }
+        } catch (_e) {}
+      } else {
+        setUserProfile(null);
+      }
     });
     return unsubscribe;
   }, []);
@@ -146,7 +158,7 @@ function App() {
       {/* Routes */}
       <div style={{ padding: '12px', maxWidth: '1200px', margin: '0 auto' }}>
         <Routes>
-          <Route path="/" element={<MapView onCitySearch={setCurrentCity} />} />
+          <Route path="/" element={<MapView onCitySearch={setCurrentCity} userProfile={userProfile} />} />
           <Route path="/trip-planner" element={<TripPlanner user={user} />} />
           <Route path="/trip-planner/share/:shareId" element={<TripPlanner user={user} />} />
           <Route path="/about" element={<About />} />

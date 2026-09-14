@@ -80,7 +80,7 @@ export function BusinessDetail({ business, onClose, onRateClick }: BusinessDetai
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
           <div>
-            <h2 style={{ margin: '0 0 4px', color: '#00ACC1' }}>{business.name}</h2>
+            <h2 style={{ margin: '0 0 4px', color: '#000000ff' }}>{business.name}</h2>
             <p style={{ margin: 0, color: '#666', fontSize: '14px' }}>{business.address}</p>
             {business.verified_features_count && Number(business.verified_features_count) > 0 && (
               <p style={{ margin: '4px 0 0', fontSize: '13px', color: '#00ACC1', fontWeight: 'bold' }}>

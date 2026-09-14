@@ -25,7 +25,13 @@ interface MapViewProps {
   onCitySearch?: (city: string) => void;
 }
 
-export function MapView({ onCitySearch }: MapViewProps) {
+interface UserProfile {
+  disability_categories?: string[];
+  identifies_as_disabled?: boolean;
+  is_caregiver?: boolean;
+}
+
+export function MapView({ onCitySearch, userProfile }: MapViewProps & { userProfile?: UserProfile }) {
   const [places, setPlaces] = useState<Place[]>([]);
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
   const [selectedBusiness, setSelectedBusiness] = useState<Business | null>(null);
@@ -125,10 +131,12 @@ export function MapView({ onCitySearch }: MapViewProps) {
       filters.category === 'hearing' ? business.hearing_accessibility_score :
       filters.category === 'sensory' ? business.sensory_accessibility_score :
       business.overall_accessibility_score;
-    if (!score) return { background: '#00ACC1', border: '#006978' };
-    if (score >= 4) return { background: '#2E7D32', border: '#1A7A40' };
-    if (score >= 3) return { background: '#E65100', border: '#B7770D' };
-    return { background: '#B71C1C', border: '#A93226' };
+    if (score === null || score === undefined) return { background: '#00ACC1', border: '#006978' }; // not yet reviewed
+    if (score === 0) return { background: '#7B0000', border: '#4A0000' };   // cannot enter
+    if (score >= 4) return { background: '#2E7D32', border: '#1A7A40' };    // good/excellent
+    if (score >= 3) return { background: '#E65100', border: '#B7770D' };    // fair
+    if (score >= 1) return { background: '#B71C1C', border: '#A93226' };    // poor
+    return { background: '#7B0000', border: '#4A0000' };                    // cannot enter (should not happen if score is validated)
   };
 
   return (
@@ -200,13 +208,30 @@ export function MapView({ onCitySearch }: MapViewProps) {
         </span>
       </div>
 
-      <div style={{ marginBottom: '8px', fontSize: '13px', color: '#666' }}>
-        Red — search results &nbsp;&nbsp;
-        Green — highly accessible &nbsp;&nbsp;
-        Yellow — fair &nbsp;&nbsp;
-        Red — not accessible &nbsp;&nbsp;
-        Blue — not yet rated
-</div>
+      {/* Search result markers: red */}
+
+      <div style={{ marginBottom: '8px', fontSize: '13px', color: '#666', display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
+        <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+          <span style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: '#00ACC1', display: 'inline-block' }} />
+          Blue = search results / not yet reviewed
+        </span>
+        <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+          <span style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: '#2E7D32', display: 'inline-block' }} />
+          Green = good access (4-5)
+        </span>
+        <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+          <span style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: '#E65100', display: 'inline-block' }} />
+          Orange = fair access (3)
+        </span>
+        <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+          <span style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: '#B71C1C', display: 'inline-block' }} />
+          Red = poor access (1-2)
+        </span>
+        <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+          <span style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: '#7B0000', display: 'inline-block' }} />
+          Dark red = cannot enter (0)
+        </span>
+      </div>
       <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
         <Map
           key={mapKey}
@@ -312,6 +337,7 @@ export function MapView({ onCitySearch }: MapViewProps) {
           businessName={selectedBusiness.name}
           onClose={() => setShowReviewForm(false)}
           onSubmitted={() => { refetch(); setSelectedBusiness(null); }}
+          userProfile={userProfile}
         />
       )}
 

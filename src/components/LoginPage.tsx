@@ -3,13 +3,16 @@ import { Logo } from './Logo';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { auth } from '../firebase';
 
+const DISABILITY_CATEGORIES = ['Mobility', 'Vision', 'Hearing', 'Cognitive/Sensory', 'Other'];
+
 export function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [username, setUsername] = useState('');
-  const [identifiesAsDisabled, setIdentifiesAsDisabled] = useState<boolean | null>(null);
+  const [identityAnswer, setIdentityAnswer] = useState<string | null>(null);
+  const [disabilityCategories, setDisabilityCategories] = useState<string[]>([]);
   const [isSignUp, setIsSignUp] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -26,9 +29,21 @@ export function LoginPage() {
     fontFamily: 'Poppins, Arial, sans-serif'
   };
 
+  const toggleCategory = (cat: string) => {
+    setDisabilityCategories(prev =>
+      prev.includes(cat) ? prev.filter(c => c !== cat) : [...prev, cat]
+    );
+  };
+
+  const showCategoryQuestion = identityAnswer === 'yes' || identityAnswer === 'caregiver';
+  const categoryQuestion = identityAnswer === 'caregiver'
+    ? 'Do you support a person with a disability that fits into one or more of these categories?'
+    : 'Does your disability fit into one or more of these categories?';
+
   const handleSubmit = async () => {
     setError(null);
     setLoading(true);
+
     try {
       if (isSignUp) {
         if (!firstName || !lastName || !username) {
@@ -41,8 +56,18 @@ export function LoginPage() {
           setLoading(false);
           return;
         }
+        if (!identityAnswer) {
+          setError('Please answer the disability identity question.');
+          setLoading(false);
+          return;
+        }
+        if (showCategoryQuestion && disabilityCategories.length === 0) {
+          setError('Please select at least one disability category.');
+          setLoading(false);
+          return;
+        }
 
-        // Check if username is availabile before creating Firebase account
+        // Check username availability
         const usernameCheck = await fetch(
           (import.meta.env.VITE_API_URL || '') + '/api/users/username-check/' + encodeURIComponent(username)
         );
@@ -55,13 +80,9 @@ export function LoginPage() {
 
         // Create Firebase account
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        await updateProfile(userCredential.user, { displayName: username });
 
-        //Set display name in Firebase
-        await updateProfile(userCredential.user, {
-          displayName: username
-        });
-
-        //Save full profile to our database
+        // Save to database
         const userRes = await fetch((import.meta.env.VITE_API_URL || '') + '/api/users', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -72,7 +93,9 @@ export function LoginPage() {
             first_name: firstName,
             last_name: lastName,
             username,
-            identifies_as_disabled: identifiesAsDisabled
+            identifies_as_disabled: identityAnswer === 'yes',
+            is_caregiver: identityAnswer === 'caregiver',
+            disability_categories: disabilityCategories.length > 0 ? disabilityCategories : null,
           })
         });
 
@@ -101,11 +124,11 @@ export function LoginPage() {
   };
 
   return (
-    <div style={{ maxWidth: '400px', margin: '60px auto', padding: '0 16px', fontFamily: 'Poppins, Arial, sans-serif' }}>
+    <div style={{ maxWidth: '440px', margin: '40px auto', padding: '0 16px', fontFamily: 'Poppins, Arial, sans-serif' }}>
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '8px' }}>
         <Logo size={100} />
       </div>
-      <h1 style={{ fontSize: '32px', color: '#00ACC1', marginBottom: '8px', textAlign: 'center' }}>Accessibility Tracker</h1>
+      <h1 style={{ fontSize: '28px', color: '#00ACC1', marginBottom: '8px', textAlign: 'center' }}>Accessibility Tracker</h1>
       <p style={{ fontSize: '14px', color: '#666', marginBottom: '24px', textAlign: 'center' }}>
         Rate, review, and discover accessible businesses near you
       </p>
@@ -124,91 +147,86 @@ export function LoginPage() {
         {isSignUp && (
           <>
             <div style={{ display: 'flex', gap: '10px' }}>
-              <input
-                type="text"
-                placeholder="First name *"
-                value={firstName}
-                onChange={e => setFirstName(e.target.value)}
-                style={{ ...inputStyle, flex: 1 }}
-              />
-              <input
-                type="text"
-                placeholder="Last name *"
-                value={lastName}
-                onChange={e => setLastName(e.target.value)}
-                style={{ ...inputStyle, flex: 1 }}
-              />
+              <input type="text" placeholder="First name *" value={firstName}
+                onChange={e => setFirstName(e.target.value)} style={{ ...inputStyle, flex: 1 }} />
+              <input type="text" placeholder="Last name *" value={lastName}
+                onChange={e => setLastName(e.target.value)} style={{ ...inputStyle, flex: 1 }} />
             </div>
-            <input
-              type="text"
-              placeholder="Username * (shown on your reviews)"
-              value={username}
-              onChange={e => setUsername(e.target.value.replace(/\s/g, ''))}
-              style={inputStyle}
-            />
+            <input type="text" placeholder="Username * (shown on your reviews)"
+              value={username} onChange={e => setUsername(e.target.value.replace(/\s/g, ''))}
+              style={inputStyle} />
           </>
         )}
 
-        <input
-          type="email"
-          placeholder="Email *"
-          value={email}
-          onChange={e => setEmail(e.target.value)}
-          style={inputStyle}
-        />
-        <input
-          type="password"
-          placeholder="Password *"
-          value={password}
+        <input type="email" placeholder="Email *" value={email}
+          onChange={e => setEmail(e.target.value)} style={inputStyle} />
+        <input type="password" placeholder="Password *" value={password}
           onChange={e => setPassword(e.target.value)}
-          onKeyDown={e => e.key === 'Enter' && handleSubmit()}
-          style={inputStyle}
-        />
+          onKeyDown={e => e.key === 'Enter' && handleSubmit()} style={inputStyle} />
 
         {isSignUp && (
-          <div style={{ marginBottom: '16px' }}>
-            <p style={{ fontSize: '13px', color: '#444', marginBottom: '8px' }}>
-              Do you identify as a person with a disability? <span style={{ color: '#999' }}>(optional)</span>
-            </p>
-            <div style={{ display: 'flex', gap: '10px' }}>
-              <button
-                onClick={() => setIdentifiesAsDisabled(true)}
-                style={{
-                  flex: 1, padding: '8px', borderRadius: '4px', border: '2px solid',
-                  borderColor: identifiesAsDisabled === true ? '#00ACC1' : '#ddd',
-                  backgroundColor: identifiesAsDisabled === true ? '#E0F7FA' : 'white',
-                  color: identifiesAsDisabled === true ? '#006978' : '#666',
-                  cursor: 'pointer', fontFamily: 'Poppins, Arial, sans-serif', fontSize: '13px', fontWeight: 'bold'
-                }}
-              >
-                Yes
-              </button>
-              <button
-                onClick={() => setIdentifiesAsDisabled(false)}
-                style={{
-                  flex: 1, padding: '8px', borderRadius: '4px', border: '2px solid',
-                  borderColor: identifiesAsDisabled === false ? '#00ACC1' : '#ddd',
-                  backgroundColor: identifiesAsDisabled === false ? '#E0F7FA' : 'white',
-                  color: identifiesAsDisabled === false ? '#006978' : '#666',
-                  cursor: 'pointer', fontFamily: 'Poppins, Arial, sans-serif', fontSize: '13px', fontWeight: 'bold'
-                }}
-              >
-                No
-              </button>
-              <button
-                onClick={() => setIdentifiesAsDisabled(null)}
-                style={{
-                  flex: 1, padding: '8px', borderRadius: '4px', border: '2px solid',
-                  borderColor: identifiesAsDisabled === null ? '#00ACC1' : '#ddd',
-                  backgroundColor: identifiesAsDisabled === null ? '#E0F7FA' : 'white',
-                  color: identifiesAsDisabled === null ? '#006978' : '#666',
-                  cursor: 'pointer', fontFamily: 'Poppins, Arial, sans-serif', fontSize: '13px', fontWeight: 'bold'
-                }}
-              >
-                Prefer not to say
-              </button>
+          <>
+            {/* Identity question */}
+            <div style={{ marginBottom: '16px' }}>
+              <p style={{ fontSize: '13px', color: '#333', fontWeight: 'bold', marginBottom: '8px' }}>
+                Do you identify as: * <span style={{ color: '#999', fontWeight: 'normal' }}>(required)</span>
+              </p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                {[
+                  { value: 'yes', label: 'A person with a disability' },
+                  { value: 'no', label: 'I do not have a disability' },
+                  { value: 'caregiver', label: 'A caregiver, support worker, or personal care assistant' },
+                  { value: 'prefer_not', label: 'Prefer not to say' },
+                ].map(opt => (
+                  <button
+                    key={opt.value}
+                    onClick={() => {
+                      setIdentityAnswer(opt.value);
+                      setDisabilityCategories([]);
+                    }}
+                    style={{
+                      padding: '10px 14px', borderRadius: '4px', border: '2px solid',
+                      borderColor: identityAnswer === opt.value ? '#00ACC1' : '#ddd',
+                      backgroundColor: identityAnswer === opt.value ? '#E0F7FA' : 'white',
+                      color: identityAnswer === opt.value ? '#006978' : '#444',
+                      cursor: 'pointer', textAlign: 'left', fontSize: '13px',
+                      fontFamily: 'Poppins, Arial, sans-serif',
+                      fontWeight: identityAnswer === opt.value ? 'bold' : 'normal'
+                    }}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
+
+            {/* Disability category question */}
+            {showCategoryQuestion && (
+              <div style={{ marginBottom: '16px', backgroundColor: '#E0F7FA', borderRadius: '6px', padding: '14px' }}>
+                <p style={{ fontSize: '13px', color: '#006978', fontWeight: 'bold', marginBottom: '8px' }}>
+                  {categoryQuestion} * <span style={{ color: '#999', fontWeight: 'normal' }}>(select all that apply)</span>
+                </p>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                  {DISABILITY_CATEGORIES.map(cat => (
+                    <button
+                      key={cat}
+                      onClick={() => toggleCategory(cat)}
+                      style={{
+                        padding: '6px 14px', borderRadius: '16px', border: '2px solid',
+                        borderColor: disabilityCategories.includes(cat) ? '#00ACC1' : '#aaa',
+                        backgroundColor: disabilityCategories.includes(cat) ? '#00ACC1' : 'white',
+                        color: disabilityCategories.includes(cat) ? 'white' : '#444',
+                        cursor: 'pointer', fontSize: '13px', fontWeight: 'bold',
+                        fontFamily: 'Poppins, Arial, sans-serif'
+                      }}
+                    >
+                      {cat}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </>
         )}
 
         <button
