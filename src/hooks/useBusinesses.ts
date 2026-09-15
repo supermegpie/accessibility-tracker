@@ -14,6 +14,9 @@ export interface Business {
   hearing_accessibility_score?: number;
   sensory_accessibility_score?: number;
   verified_features_count?: number;
+  auto_scored?: boolean;
+  google_rating?: number;
+  google_wheelchair_accessible?: boolean;
 }
 
 export function useBusinesses(minScore = 0, businessType = 'all', category = 'all') {

@@ -7,12 +7,24 @@ import { AccessibilityFilter, FilterState } from './AccessibilityFilter';
 
 const CHICAGO_CENTER = { lat: 41.8781, lng: -87.6298 };
 
+interface PlaceDbData {
+  overall_accessibility_score?: number;
+  mobility_accessibility_score?: number;
+  vision_accessibility_score?: number;
+  hearing_accessibility_score?: number;
+  sensory_accessibility_score?: number;
+  google_rating?: number;
+  google_wheelchair_accessible?: boolean;
+  auto_scored?: boolean;
+}
+
 interface Place {
   place_id: string;
   name: string;
   vicinity: string;
   rating?: number;
   types?: string[];
+  db_data?: PlaceDbData | null;
   geometry: {
     location: {
       lat: number;
@@ -125,18 +137,35 @@ export function MapView({ onCitySearch, userProfile }: MapViewProps & { userProf
   };
 
   /* Determine marker color based on accessibility score */
+  const getPlaceMarkerColor = (place: Place) => {
+    if (!place.db_data) return { background: '#00ACC1', border: '#006978' }; // not in database
+    const db = place.db_data;
+    const score = db.overall_accessibility_score ?? db.google_rating ?? null;
+    if (score === null) return { background: '#00ACC1', border: '#006978' };
+    if (score === 0) return { background: '#7B0000', border: '#4A0000' };
+    if (score >= 4) return { background: '#2E7D32', border: '#1A7A40' };
+    if (score >= 3) return { background: '#E65100', border: '#B7770D' };
+    if (score >= 1) return { background: '#B71C1C', border: '#A93226' };
+    return { background: '#00ACC1', border: '#006978' };
+  };
+
   const getMarkerColor = (business: Business) => {
-    const score = filters.category === 'mobility' ? business.mobility_accessibility_score :
-      filters.category === 'vision' ? business.vision_accessibility_score :
-      filters.category === 'hearing' ? business.hearing_accessibility_score :
-      filters.category === 'sensory' ? business.sensory_accessibility_score :
+    // Use category score if exists, then overall, then google_rating as fallback
+    const categoryScore =
+      filters.category === 'mobility' ? business.mobility_accessibility_score :
+      filters.category === 'vision'   ? business.vision_accessibility_score :
+      filters.category === 'hearing'  ? business.hearing_accessibility_score :
+      filters.category === 'sensory'  ? business.sensory_accessibility_score :
       business.overall_accessibility_score;
-    if (score === null || score === undefined) return { background: '#00ACC1', border: '#006978' }; // not yet reviewed
-    if (score === 0) return { background: '#7B0000', border: '#4A0000' };   // cannot enter
-    if (score >= 4) return { background: '#2E7D32', border: '#1A7A40' };    // good/excellent
-    if (score >= 3) return { background: '#E65100', border: '#B7770D' };    // fair
-    if (score >= 1) return { background: '#B71C1C', border: '#A93226' };    // poor
-    return { background: '#7B0000', border: '#4A0000' };                    // cannot enter (should not happen if score is validated)
+
+    const score = categoryScore ?? business.google_rating ?? null;
+
+    if (score === null || score === undefined) return { background: '#00ACC1', border: '#006978' };
+    if (score === 0) return { background: '#7B0000', border: '#4A0000' };
+    if (score >= 4) return { background: '#2E7D32', border: '#1A7A40' };
+    if (score >= 3) return { background: '#E65100', border: '#B7770D' };
+    if (score >= 1) return { background: '#B71C1C', border: '#A93226' };
+    return { background: '#7B0000', border: '#4A0000' };
   };
 
   return (
@@ -240,14 +269,19 @@ export function MapView({ onCitySearch, userProfile }: MapViewProps & { userProf
           defaultZoom={mapZoom}
           mapId="accessibility-tracker-map"
         >
-          {/* Search result markers: red */}
-          {places.map(place => (
+          {/* Search result markers — colored by score if in database, filtered if filter active */}
+          {places.filter(place => {
+            if (filters.minScore === 0) return true; // no filter — show all
+            if (!place.db_data) return false; // filter active — hide unscored
+            const score = place.db_data.overall_accessibility_score ?? place.db_data.google_rating ?? null;
+            return score !== null && score >= filters.minScore;
+          }).map(place => (
             <AdvancedMarker
               key={place.place_id}
               position={place.geometry.location}
               onClick={() => { setSelectedPlace(place); setSelectedBusiness(null); }}
             >
-              <Pin background="#00ACC1" borderColor="#006978" glyphColor="white" />
+              <Pin background={getPlaceMarkerColor(place).background} borderColor={getPlaceMarkerColor(place).border} glyphColor="white" />
             </AdvancedMarker>
           ))}
 
