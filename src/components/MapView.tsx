@@ -171,13 +171,15 @@ export function MapView({ onCitySearch, userProfile }: MapViewProps & { userProf
 
   return (
     <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
-      {/* Nearby reviews sidebar - desktop only */}
+      {/* Nearby reviews sidebar for desktop only */}
       <div style={{ display: 'none' }} className="nearby-sidebar">
         <NearbyReviews
           center={mapCenter}
           onBusinessClick={(b: any) => {
             setMapCenter({ lat: Number(b.latitude), lng: Number(b.longitude) });
             setMapKey(prev => prev + 1);
+            setSelectedBusiness(b);
+            setSelectedPlace(null);
           }}
         />
       </div>
