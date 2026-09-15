@@ -24,3 +24,9 @@ input, select, textarea, button {
     width: 100% !important;
   }
 }
+
+@media (min-width: 1024px) {
+  .nearby-sidebar {
+    display: block !important;
+  }
+}

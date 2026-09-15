@@ -4,6 +4,7 @@ import { useBusinesses, Business } from '../hooks/useBusinesses';
 import { ReviewForm } from './ReviewForm';
 import { BusinessDetail } from './BusinessDetail';
 import { AccessibilityFilter, FilterState } from './AccessibilityFilter';
+import { NearbyReviews } from './NearbyReviews';
 
 const CHICAGO_CENTER = { lat: 41.8781, lng: -87.6298 };
 
@@ -169,7 +170,18 @@ export function MapView({ onCitySearch, userProfile }: MapViewProps & { userProf
   };
 
   return (
-    <div>
+    <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+      {/* Nearby reviews sidebar - desktop only */}
+      <div style={{ display: 'none' }} className="nearby-sidebar">
+        <NearbyReviews
+          center={mapCenter}
+          onBusinessClick={(b: any) => {
+            setMapCenter({ lat: Number(b.latitude), lng: Number(b.longitude) });
+            setMapKey(prev => prev + 1);
+          }}
+        />
+      </div>
+      <div style={{ flex: 1 }}>
       <AccessibilityFilter filters={filters} onChange={setFilters} />
       <div style={{
         marginBottom: '10px',
@@ -269,7 +281,7 @@ export function MapView({ onCitySearch, userProfile }: MapViewProps & { userProf
           defaultZoom={mapZoom}
           mapId="accessibility-tracker-map"
         >
-          {/* Search result markers — colored by score if in database, filtered if filter active */}
+          {/* Search result markers. Colored by score if in database, filtered if filter active */}
           {places.filter(place => {
             if (filters.minScore === 0) return true; // no filter — show all
             if (!place.db_data) return false; // filter active — hide unscored
@@ -382,6 +394,7 @@ export function MapView({ onCitySearch, userProfile }: MapViewProps & { userProf
           onRateClick={() => { setShowBusinessDetail(false); setShowReviewForm(true); }}
         />
       )}
+      </div>
     </div>
   );
 }
