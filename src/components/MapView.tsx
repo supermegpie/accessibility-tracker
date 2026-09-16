@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { APIProvider, Map, AdvancedMarker, InfoWindow, Pin } from '@vis.gl/react-google-maps';
+import { APIProvider, Map, AdvancedMarker, InfoWindow, Pin, useMap } from '@vis.gl/react-google-maps';
 import { useBusinesses, Business } from '../hooks/useBusinesses';
 import { ReviewForm } from './ReviewForm';
 import { BusinessDetail } from './BusinessDetail';
@@ -7,6 +7,35 @@ import { AccessibilityFilter, FilterState } from './AccessibilityFilter';
 import { NearbyReviews } from './NearbyReviews';
 
 const CHICAGO_CENTER = { lat: 41.8781, lng: -87.6298 };
+
+interface FitBoundsProps {
+  places: { geometry: { location: { lat: number; lng: number } } }[];
+  businesses: { latitude: number | string; longitude: number | string }[];
+  categoryFilter: string;
+}
+function FitBounds({ places, businesses, categoryFilter }: FitBoundsProps) {
+  const map = useMap();
+  useEffect(() => {
+    if (!map) return;
+
+    // Use saved businesses when disability filter is active, otherwise use places
+    const useBusinesses = categoryFilter !== 'all' && businesses.length > 0;
+    const points = useBusinesses
+      ? businesses.map(b => ({ lat: Number(b.latitude), lng: Number(b.longitude) }))
+      : places.map(p => p.geometry.location);
+
+    if (points.length === 0) return;
+    if (points.length === 1) {
+      map.panTo(points[0]);
+      map.setZoom(15);
+      return;
+    }
+    const bounds = new (window as any).google.maps.LatLngBounds();
+    points.forEach(p => bounds.extend(p));
+    map.fitBounds(bounds, 60);
+  }, [map, places, businesses, categoryFilter]);
+  return null;
+}
 
 interface PlaceDbData {
   overall_accessibility_score?: number;
@@ -283,6 +312,7 @@ export function MapView({ onCitySearch, userProfile }: MapViewProps & { userProf
           defaultZoom={mapZoom}
           mapId="accessibility-tracker-map"
         >
+          <FitBounds places={places} businesses={businesses} categoryFilter={filters.category} />
           {/* Search result markers. Colored by score if in database, filtered if filter active */}
           {places.filter(place => {
             if (filters.minScore === 0) return true; // no filter — show all
