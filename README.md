@@ -2,6 +2,8 @@
 
 Accessibility Tracker is a community-driven platform where disabled travelers find, rate, and share real accessibility experiences.
 
+The app is live at: https://accessibility-tracker-sooty.vercel.app
+
 ## Why I Built This
 I sustained a spinal cord injury just before starting college, and navigating the world with a new disability taught me quickly how unreliable existing accessibility information can be. That experience led me to UW's Restorative Technologies Lab, where I spent three years working directly with individuals with spinal cord injuries on assistive and rehabilitative technology. That work deepened my understanding of how much the built environment shapes what's possible for people with physical disabilities, and how little community-sourced information exists to help disabled travelers navigate it.
 
@@ -11,27 +13,48 @@ Existing platforms, such as Google Maps, include some accessibility data, but it
 
 ### Accessibility Map
 Search any city and browse businesses on an interactive Google Map. Markers are color-coded by accessibility score so you can see at a glance which places are worth visiting:
-  - Green = Highly accessible (4+)
-  - Yellow = Fair (3+)
-  - Red = Not accessible (below 3)
-  - Blue = Not rated yet
+  - Green = Highly accessible (4-5)
+  - Yellow = Fair (3)
+  - Red = Poor access (1-2)
+  - Dark red = cannot enter (0)
+  - Blue = Not yet reviewed by community (auto-scored from Google data)
 
-  You can also filter by minimum score and business type, and save any business to the tracker.
+  You can also filter by minimum score and disability category. The map automatically fits to show all results when you search. A nearby reviews sidebar on desktop shows the closest reviewed businesses sorted by distance and score.
+
+### Disability-Specific Filter
+Sort by four diability categories:
+  - Mobility & Physical Access
+  - Vision Accessibility
+  - Hearing Accessibility
+  - Cognitive & Sensory
+
+  When a disability filter is active the map only shows businesses with a community score for that specific category, so results are always meaningful.
 
 ### Community Reviews
-Once a business is saved, anyone can submit a review across four categories:
+Our tiered review form asks structured, objective questions based on ADA guidelines rather than just subjective 1-5 ratings. The score is computed automatically from your answers:
 - Submit structured accessibility ratings across 4 categories:
-  - Mobility & Physical Access (including restrooms)
-  - Sensory Accessibility (braille, hearing loops)
-  - Staff & Service Quality
-  - Parking & Transit Access
+  - Score 0: Cannot enter (no accessible entry confirmed)
+  - Score 1: Accessible entry confirmed (Tier 1 passed)
+  - Score 2: Entry + core access confirmed (Tier 1 + 2 passed)
+  - Score 3: Entry + core + some amenities (2+ features)
+  - Score 3: Entry + core + some amenities (2+ features)
+  - Score 5: Entry + core + excellent amenities, no warnings
 
-  Each business receives an overall score that updates automatically as new reviews are received.
+  Each business receives an overall score that updates automatically as new reviews are received.When you create an account you tell us which disability categories are relevant to you, so the review form only shows what matters to your experience.
 
-### City Accessibility Dashboard
+### My Reviews
+A personal page showing all the reviews you've submitted, with scores, tags, and comments for each business.
+
+### Nearby Reviews Sidebar (Desktop Only)
+A panel alongside the map showing the closest reviewed businesses to your current map position, sorted by both distance and accessibility score.
+
+### Pre-scored Venues
+Over 700 Chicago businesses have been pre-populated from Google Places data, filtered to only include places where Google has verified wheelchair accessible entry or with a Google rating 4+. These show up as blue pins until a community member reviews them.
+
+### City Accessibility Dashboard (Coming Soon)
 A quick snapshot of how accessible a city is based on all the reviews in the tracker. Shows overall scores by category, top-rated businesses, and a breakdown by business type.
 
-### Accessible Trip Planner
+### Accessible Trip Planner (Coming Soon)
 Search for any type of business (like "coffee shop" or "sports bar") and get back the top 5 most accessible options, ranked using a combination of:
 - Google wheelchair accessible entrance flad
 - Google star ratings
