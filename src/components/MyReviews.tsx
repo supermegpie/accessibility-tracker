@@ -107,7 +107,7 @@ export function MyReviews() {
                 color: 'white', display: 'flex', alignItems: 'center',
                 justifyContent: 'center', fontWeight: 'bold', fontSize: '16px'
               }}>
-                {review.overall_score?.toFixed(1)}
+                {Number(review.overall_score)?.toFixed(1)}
               </div>
               <p style={{ margin: '4px 0 0', fontSize: '11px', color: '#999' }}>{scoreLabel(review.overall_score)}</p>
             </div>
