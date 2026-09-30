@@ -98,20 +98,46 @@ export function BusinessDetail({ business, onClose, onRateClick }: BusinessDetai
           backgroundColor: '#f8f9fa', borderRadius: '8px', padding: '16px',
           marginBottom: '20px', textAlign: 'center'
         }}>
-          {overallScore ? (
+          {overallScore !== null && overallScore !== undefined ? (
             <>
               <div style={{ fontSize: '48px', fontWeight: 'bold', color: scoreColor }}>
                 {Number(overallScore).toFixed(1)}
               </div>
-              <div style={{ fontSize: '14px', color: '#666' }}>Overall Accessibility Score</div>
-              <div style={{ fontSize: '13px', color: '#999', marginTop: '4px' }}>
-                Based on {reviews.length} {reviews.length === 1 ? 'review' : 'reviews'}
-              </div>
+              {(() => {
+                const reviewedCategories = [
+                  avgScore('mobility_score'),
+                  avgScore('vision_score'),
+                  avgScore('hearing_score'),
+                  avgScore('sensory_score')
+                ].filter(s => s !== null).length;
+
+                const scoreLabel = reviewedCategories === 1
+                  ? (['mobility_score', 'vision_score', 'hearing_score', 'sensory_score'] as const)
+                    .map((k, i) => avgScore(k) !== null ? ['Mobility', 'Vision', 'Hearing', 'Cognitive & Sensory'][i] : null)
+                    .find(Boolean) + ' Score'
+                  : 'Overall Accessibility Score';
+
+                const categoryNote = reviewedCategories > 0 && reviewedCategories < 4
+                  ? `${reviewedCategories} of 4 categories reviewed`
+                  : null;
+
+                return (
+                  <>
+                    <div style={{ fontSize: '14px', color: '#666', marginTop: '4px' }}>{scoreLabel}</div>
+                    {categoryNote && (
+                      <div style={{ fontSize: '12px', color: '#F06292', marginTop: '2px' }}>{categoryNote}</div>
+                    )}
+                    <div style={{ fontSize: '13px', color: '#999', marginTop: '4px' }}>
+                      Based on {reviews.length} review{reviews.length !== 1 ? 's' : ''}
+                    </div>
+                  </>
+                );
+              })()}
             </>
           ) : (
             <div style={{ color: '#666' }}>No reviews yet — be the first to rate!</div>
-          )}
-        </div>
+         )}
+      </div>
 
         {/* Score Breakdown */}
         {reviews.length > 0 && (
@@ -171,9 +197,11 @@ export function BusinessDetail({ business, onClose, onRateClick }: BusinessDetai
               </span>
             </div>
             <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '6px' }}>
-              <span style={{ fontSize: '12px', backgroundColor: '#f0f0f0', padding: '2px 8px', borderRadius: '12px' }}>Mobility & Physical Access: {review.mobility_score}/5</span>
-              <span style={{ fontSize: '12px', backgroundColor: '#f0f0f0', padding: '2px 8px', borderRadius: '12px' }}>Sensory: {review.sensory_score}/5</span>
-              <span style={{ fontSize: '12px', backgroundColor: '#f0f0f0', padding: '2px 8px', borderRadius: '12px' }}>Service: {review.service_score}/5</span>
+              {review.mobility_score !== null && review.mobility_score !== undefined && <span style={{ fontSize: '12px', backgroundColor: '#f0f0f0', padding: '2px 8px', borderRadius: '12px' }}>Mobility: {review.mobility_score}/5</span>}
+              {review.vision_score !== null && review.vision_score !== undefined && <span style={{ fontSize: '12px', backgroundColor: '#f0f0f0', padding: '2px 8px', borderRadius: '12px' }}>Vision: {review.vision_score}/5</span>}
+              {review.hearing_score !== null && review.hearing_score !== undefined && <span style={{ fontSize: '12px', backgroundColor: '#f0f0f0', padding: '2px 8px', borderRadius: '12px' }}>Hearing: {review.hearing_score}/5</span>}
+              {review.sensory_score !== null && review.sensory_score !== undefined && <span style={{ fontSize: '12px', backgroundColor: '#f0f0f0', padding: '2px 8px', borderRadius: '12px' }}>Sensory: {review.sensory_score}/5</span>}
+              {review.service_score !== null && review.service_score !== undefined && <span style={{ fontSize: '12px', backgroundColor: '#f0f0f0', padding: '2px 8px', borderRadius: '12px' }}>Service: {review.service_score}/5</span>}
               {/*<span style={{ fontSize: '12px', backgroundColor: '#f0f0f0', padding: '2px 8px', borderRadius: '12px' }}>Parking & Transportation: {review.restroom_score}/5</span>
               <span style={{ fontSize: '12px', backgroundColor: '#f0f0f0', padding: '2px 8px', borderRadius: '12px' }}>Accessible Restrooms: {review.parking_score}/5</span>*/}
             </div>
