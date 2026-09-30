@@ -57,11 +57,13 @@ export function BusinessDetail({ business, onClose, onRateClick }: BusinessDetai
       .catch(() => setLoading(false));
   }, [business.id]);
 
-  const avgScore = (key: keyof Review) => {
-    if (reviews.length === 0) return 0;
-    return reviews.reduce((sum, r) => sum + (r[key] as number), 0) / reviews.length;
+  const avgScore = (field: keyof Review) => {
+    const scores = reviews
+      .map(r => r[field] as number)
+      .filter(s => s !== null && s !== undefined);
+    if (scores.length === 0) return null;
+    return scores.reduce((a, b) => a + b, 0) / scores.length;
   };
-
   const overallScore = business.overall_accessibility_score;
   const scoreColor = overallScore >= 4 ? '#2E7D32' : overallScore >= 3 ? '#E65100' : overallScore ? '#B71C1C' : '#00ACC1';
 
@@ -115,16 +117,18 @@ export function BusinessDetail({ business, onClose, onRateClick }: BusinessDetai
         {reviews.length > 0 && (
           <div style={{ marginBottom: '20px' }}>
             <h3 style={{ margin: '0 0 12px', fontSize: '16px' }}>Score Breakdown</h3>
-            <ScoreBar label="Mobility & Physical Access" score={avgScore('mobility_score')} />
-            <ScoreBar label="Vision Accessibility" score={avgScore('vision_score')} />
-            <ScoreBar label="Hearing Accessibility" score={avgScore('hearing_score')} />
-            <ScoreBar label="Cognitive & Sensory" score={avgScore('sensory_score')} />
-            <ScoreBar label="Staff & Service Quality" score={avgScore('service_score')} />
-            <div style={{ borderTop: '1px solid #eee', paddingTop: '8px', marginTop: '4px' }}>
-              <p style={{ margin: '0 0 6px', fontSize: '12px', color: '#999' }}>Sub-scores</p>
-              <ScoreBar label="Accessible Restrooms" score={avgScore('parking_score')} />
-              <ScoreBar label="Parking & Transportation" score={avgScore('restroom_score')} />
-            </div>
+            {avgScore('mobility_score') !== null && <ScoreBar label="Mobility & Physical Access" score={avgScore('mobility_score')!} />}
+            {avgScore('vision_score') !== null && <ScoreBar label="Vision Accessibility" score={avgScore('vision_score')!} />}
+            {avgScore('hearing_score') !== null && <ScoreBar label="Hearing Accessibility" score={avgScore('hearing_score')!} />}
+            {avgScore('sensory_score') !== null && <ScoreBar label="Cognitive & Sensory" score={avgScore('sensory_score')!} />}
+            {avgScore('service_score') !== null && <ScoreBar label="Staff & Service Quality" score={avgScore('service_score')!} />}
+            {(avgScore('parking_score') !== null && avgScore('parking_score')! > 0 || avgScore('restroom_score') !== null && avgScore('restroom_score')! > 0) && (
+              <div style={{ borderTop: '1px solid #eee', paddingTop: '8px', marginTop: '4px' }}>
+                <p style={{ margin: '0 0 6px', fontSize: '12px', color: '#999' }}>Sub-scores</p>
+                {avgScore('parking_score') !== null && avgScore('parking_score')! > 0 && <ScoreBar label="Accessible Restrooms" score={avgScore('parking_score')!} />}
+                {avgScore('restroom_score') !== null && avgScore('restroom_score')! > 0 && <ScoreBar label="Parking & Transportation" score={avgScore('restroom_score')!} />}
+              </div>
+            )}
           </div>
         )}
 
