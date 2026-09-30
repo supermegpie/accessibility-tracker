@@ -311,6 +311,15 @@ export function MapView({ onCitySearch, userProfile }: MapViewProps & { userProf
           defaultCenter={mapCenter}
           defaultZoom={mapZoom}
           mapId="accessibility-tracker-map"
+          onCameraChanged={(e) => {
+            const newCenter = e.detail.center;
+            if (
+              Math.abs(newCenter.lat - mapCenter.lat) > 0.05 ||
+              Math.abs(newCenter.lng - mapCenter.lng) > 0.05
+            ) {
+              setMapCenter({ lat: newCenter.lat, lng: newCenter.lng });
+            }
+          }}
         >
           <FitBounds places={places} businesses={businesses} categoryFilter={filters.category} />
           {/* Search result markers. Colored by score if in database, filtered if filter active */}
