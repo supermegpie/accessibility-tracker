@@ -104,7 +104,7 @@ const [locationReady, setLocationReady] = useState(false);
           setUserLocation(loc);
           setLocationReady(true);
           setMapKey(prev => prev + 1);
-        },,
+        },
         () => {
           // If user denies location, keep default Chicago center
           console.log('Location access denied, using default center');
