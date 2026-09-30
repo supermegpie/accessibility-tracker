@@ -49,12 +49,17 @@ function ScoreBar({ label, score }: { label: string; score: number }) {
 export function BusinessDetail({ business, onClose, onRateClick }: BusinessDetailProps) {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
+  const [featureData, setFeatureData] = useState<any[]>([]);
 
   useEffect(() => {
     fetch((import.meta.env.VITE_API_URL || '') + `/api/reviews/${business.id}`)
       .then(res => res.json())
       .then(data => { setReviews(data); setLoading(false); })
       .catch(() => setLoading(false));
+    fetch((import.meta.env.VITE_API_URL || '') + `/api/review-features/${business.id}`)
+      .then(r => r.json())
+      .then(data => setFeatureData(Array.isArray(data) ? data : []))
+      .catch(() => {});
   }, [business.id]);
 
   const avgScore = (field: keyof Review) => {
@@ -167,6 +172,75 @@ export function BusinessDetail({ business, onClose, onRateClick }: BusinessDetai
             )}
           </div>
         )}
+
+        {/* Tiered Feature Breakdown */}
+        {featureData.length > 0 && (
+          <div style={{ marginBottom: '20px' }}>
+            <h3 style={{ margin: '0 0 12px', fontSize: '16px' }}>Community Verified Features</h3>
+            {(['mobility', 'vision', 'hearing', 'sensory'] as const).map(category => {
+              const entries = featureData.filter(f => f.category === category);
+              if (entries.length === 0) return null;
+
+              const allFeatures = Array.from(new Set(entries.flatMap((e: any) => e.tier3_features || [])));
+              const allWarnings = Array.from(new Set(entries.flatMap((e: any) => e.warnings || [])));
+              const avgScore = entries.reduce((sum: number, e: any) => sum + Number(e.computed_score), 0) / entries.length;
+              const tier1Passed = entries.some((e: any) => e.tier1_passed);
+              const tier2Passed = entries.some((e: any) => e.tier2_passed);
+
+              const categoryLabels: Record<string, string> = {
+                mobility: 'Mobility & Physical Access',
+                vision: 'Vision Accessibility',
+                hearing: 'Hearing Accessibility',
+                sensory: 'Cognitive & Sensory',
+              };
+
+              const scoreColor = avgScore === 0 ? '#7B0000' : avgScore >= 4 ? '#2E7D32' : avgScore >= 3 ? '#E65100' : '#B71C1C';
+
+              return (
+                <div key={category} style={{ marginBottom: '16px', borderLeft: `3px solid ${scoreColor}`, paddingLeft: '12px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                    <p style={{ margin: 0, fontWeight: 'bold', fontSize: '13px', color: '#333' }}>{categoryLabels[category]}</p>
+                    <span style={{ fontSize: '13px', fontWeight: 'bold', color: scoreColor }}>{avgScore.toFixed(1)}/5</span>
+                  </div>
+
+                  {/* Tier status */}
+                  <div style={{ display: 'flex', gap: '6px', marginBottom: '8px', flexWrap: 'wrap' }}>
+                    <span style={{ fontSize: '11px', padding: '2px 8px', borderRadius: '10px', backgroundColor: tier1Passed ? '#E8F5E9' : '#FFEBEE', color: tier1Passed ? '#2E7D32' : '#B71C1C' }}>
+                      {tier1Passed ? '✓ Accessible entry' : '✗ Entry not confirmed'}
+                    </span>
+                    {tier1Passed && (
+                      <span style={{ fontSize: '11px', padding: '2px 8px', borderRadius: '10px', backgroundColor: tier2Passed ? '#E8F5E9' : '#FFF3E0', color: tier2Passed ? '#2E7D32' : '#E65100' }}>
+                        {tier2Passed ? '✓ Interior access confirmed' : '✗ Interior access not confirmed'}
+                      </span>
+               )}
+              </div>
+
+              {/* Confirmed features */}
+              {allFeatures.length > 0 && (
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginBottom: '6px' }}>
+                  {allFeatures.map((f: string) => (
+                     <span key={f} style={{ fontSize: '11px', backgroundColor: '#E0F7FA', color: '#006978', padding: '2px 8px', borderRadius: '10px' }}>
+                      {f}
+                    </span>
+                  ))}
+                </div>
+              )}
+
+              {/* Warnings */}
+              {allWarnings.length > 0 && (
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+              {allWarnings.map((w: string) => (
+                <span key={w} style={{ fontSize: '11px', backgroundColor: '#FFF3E0', color: '#E65100', padding: '2px 8px', borderRadius: '10px' }}>
+                  ⚠ {w}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+      );
+    })}
+  </div>
+)} 
 
         {/* Rate Button */}
         <button
