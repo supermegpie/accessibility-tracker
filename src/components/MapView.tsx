@@ -80,12 +80,12 @@ export function MapView({ onCitySearch, userProfile }: MapViewProps & { userProf
   const [mapCenter, setMapCenter] = useState(CHICAGO_CENTER);
   const [searchInput, setSearchInput] = useState('');
   const [businessQuery, setBusinessQuery] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [searchLoading, setSearchLoading] = useState(false);
 
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [showBusinessDetail, setShowBusinessDetail] = useState(false);
   const [filters, setFilters] = useState<FilterState>({ minScore: 0, category: 'all', businessType: 'all' });
-  const { businesses, refetch } = useBusinesses(filters.minScore, filters.businessType, filters.category);
+  const { businesses, refetch } = useBusinesses(filters.minScore, filters.businessType, filters.category, mapCenter);
   const [mapZoom, setMapZoom] = useState(13);
   const [userLocation, setUserLocation] = useState<{lat: number, lng: number} | null>(null);
   const [mapKey, setMapKey] = useState(0);
@@ -115,7 +115,7 @@ export function MapView({ onCitySearch, userProfile }: MapViewProps & { userProf
       alert('Please enter a city or neighborhood, or allow location access so we can search near you.');
       return;
     }
-    setLoading(true);
+    setSearchLoading(true);
     try {
       const locationParam = searchInput
         ? encodeURIComponent(searchInput)
@@ -129,7 +129,7 @@ export function MapView({ onCitySearch, userProfile }: MapViewProps & { userProf
       const data = await response.json();
       if (!data.places || !data.center) {
         console.error('Invalid response from places API:', data);
-        setLoading(false);
+        setSearchLoading(false);
         return;
       }
       setPlaces(data.places);
@@ -140,7 +140,7 @@ export function MapView({ onCitySearch, userProfile }: MapViewProps & { userProf
     } catch (error) {
       console.error('Search failed:', error);
     }
-    setLoading(false);
+    setSearchLoading(false);
   };
 
   const saveBusiness = async (place: Place) => {
@@ -271,9 +271,9 @@ export function MapView({ onCitySearch, userProfile }: MapViewProps & { userProf
             fontSize: '16px',
             whiteSpace: 'nowrap'
           }}
-          disabled={loading}
+          disabled={searchLoading}
         >
-          {loading ? 'Searching...' : 'Search'}
+          {searchLoading ? 'Searching...' : 'Search'}
         </button>
         <span style={{ fontSize: '13px', color: '#666', whiteSpace: 'nowrap' }}>
           {businesses.length} {businesses.length === 1 ? 'business' : 'businesses'} tracked

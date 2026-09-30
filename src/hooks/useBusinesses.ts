@@ -19,7 +19,7 @@ export interface Business {
   google_wheelchair_accessible?: boolean;
 }
 
-export function useBusinesses(minScore = 0, businessType = 'all', category = 'all') {
+export function useBusinesses(minScore = 0, businessType = 'all', category = 'all', center?: { lat: number; lng: number }) {
   const [businesses, setBusinesses] = useState<Business[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -33,9 +33,13 @@ export function useBusinesses(minScore = 0, businessType = 'all', category = 'al
 
       const baseUrl = import.meta.env.VITE_API_URL || '';
       const hasFilters = minScore > 0 || businessType !== 'all' || category !== 'all';
+      if (center) {
+        params.append('lat', String(center.lat));
+        params.append('lng', String(center.lng));
+      }
       const url = hasFilters
         ? `${baseUrl}/api/businesses/filter?${params.toString()}`
-        : `${baseUrl}/api/businesses`;
+        : `${baseUrl}/api/businesses?${params.toString()}`;
 
       const response = await fetch(url);
       if (!response.ok) throw new Error('Network response was not ok');
@@ -51,7 +55,7 @@ export function useBusinesses(minScore = 0, businessType = 'all', category = 'al
 
   useEffect(() => {
     fetchBusinesses();
-  }, [minScore, businessType, category]);
+  }, [minScore, businessType, category, center?.lat, center?.lng]);
 
   return { businesses, loading, error, refetch: fetchBusinesses };
 }
