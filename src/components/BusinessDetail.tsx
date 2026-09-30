@@ -98,7 +98,17 @@ export function BusinessDetail({ business, onClose, onRateClick }: BusinessDetai
           backgroundColor: '#f8f9fa', borderRadius: '8px', padding: '16px',
           marginBottom: '20px', textAlign: 'center'
         }}>
-          {overallScore !== null && overallScore !== undefined ? (
+          {(() => {
+    const reviewedCategories = [
+      avgScore('mobility_score'),
+      avgScore('vision_score'),
+      avgScore('hearing_score'),
+      avgScore('sensory_score')
+    ].filter(s => s !== null).length;
+    // Only show score if there are category scores OR the overall score is meaningful
+    const hasValidScore = reviewedCategories > 0;
+    return hasValidScore;
+  })() ? (
             <>
               <div style={{ fontSize: '48px', fontWeight: 'bold', color: scoreColor }}>
                 {Number(overallScore).toFixed(1)}
