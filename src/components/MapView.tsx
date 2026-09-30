@@ -77,7 +77,10 @@ export function MapView({ onCitySearch, userProfile }: MapViewProps & { userProf
   const [places, setPlaces] = useState<Place[]>([]);
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
   const [selectedBusiness, setSelectedBusiness] = useState<Business | null>(null);
-  const [mapCenter, setMapCenter] = useState(CHICAGO_CENTER);
+  const [mapCenter, setMapCenter] = useState(() => {
+    //overridden by geolocation if available
+    return CHICAGO_CENTER;});
+const [locationReady, setLocationReady] = useState(false);
   const [searchInput, setSearchInput] = useState('');
   const [businessQuery, setBusinessQuery] = useState('');
   const [searchLoading, setSearchLoading] = useState(false);
@@ -85,7 +88,7 @@ export function MapView({ onCitySearch, userProfile }: MapViewProps & { userProf
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [showBusinessDetail, setShowBusinessDetail] = useState(false);
   const [filters, setFilters] = useState<FilterState>({ minScore: 0, category: 'all', businessType: 'all' });
-  const { businesses, refetch } = useBusinesses(filters.minScore, filters.businessType, filters.category, mapCenter);
+  const { businesses, refetch } = useBusinesses(filters.minScore, filters.businessType, filters.category, locationReady ? mapCenter : undefined);
   const [mapZoom, setMapZoom] = useState(13);
   const [userLocation, setUserLocation] = useState<{lat: number, lng: number} | null>(null);
   const [mapKey, setMapKey] = useState(0);
@@ -99,11 +102,13 @@ export function MapView({ onCitySearch, userProfile }: MapViewProps & { userProf
           const loc = { lat: position.coords.latitude, lng: position.coords.longitude };
           setMapCenter(loc);
           setUserLocation(loc);
+          setLocationReady(true);
           setMapKey(prev => prev + 1);
-        },
+        },,
         () => {
           // If user denies location, keep default Chicago center
           console.log('Location access denied, using default center');
+          setLocationReady(true);
         }
       );
     }
